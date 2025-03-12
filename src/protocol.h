@@ -15,8 +15,8 @@
 #include <string>
 #include "uint256.h"
 
-#define PPCOIN_PORT  9901
-#define RPC_PORT     9902
+#define PPCOIN_PORT  9999
+#define RPC_PORT     10000
 #define TESTNET_PORT 9903
 #define TESTNET_RPC_PORT 9904
 

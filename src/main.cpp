@@ -36,8 +36,8 @@ unsigned int nTransactionsUpdated = 0;
 map<uint256, CBlockIndex*> mapBlockIndex;
 set<pair<COutPoint, unsigned int> > setStakeSeen;
 uint256 hashGenesisBlock = hashGenesisBlockOfficial;
-static CBigNum bnProofOfWorkLimit(~uint256(0) >> 32);
-static CBigNum bnInitialHashTarget(~uint256(0) >> 40);
+static CBigNum bnProofOfWorkLimit(~uint256(0) >> 5);
+static CBigNum bnInitialHashTarget(~uint256(0) >> 10);
 unsigned int nStakeMinAge = STAKE_MIN_AGE;
 int nCoinbaseMaturity = COINBASE_MATURITY_PPC;
 CBlockIndex* pindexGenesisBlock = NULL;
@@ -1182,7 +1182,7 @@ void static PruneOrphanBlocks()
 
 
 static const int64 nTargetTimespan = 7 * 24 * 60 * 60;  // one week
-static const int64 nTargetSpacingWorkMax = 12 * STAKE_TARGET_SPACING; // 2-hour
+static const int64 nTargetSpacingWorkMax = STAKE_TARGET_SPACING; // 2-hour
 
 //
 // minimum amount of work that could possibly be required nTime after
@@ -5241,15 +5241,15 @@ void BitcoinMiner(CWallet *pwallet, bool fProofOfStake)
             return;
         }
 
-        while (vNodes.empty())
-            MilliSleep(1000);
+        // while (vNodes.empty())
+        //     MilliSleep(1000);
 
-        while (Checkpoints::GuessVerificationProgress(pindexBest)<0.996)
-        {
-            printf("Minter thread sleeps while sync at %f\n",Checkpoints::GuessVerificationProgress(pindexBest));
-            strMintWarning = strMintSyncMessage;
-            MilliSleep(10000);
-        }
+        // while (Checkpoints::GuessVerificationProgress(pindexBest)<0.996)
+        // {
+        //     printf("Minter thread sleeps while sync at %f\n",Checkpoints::GuessVerificationProgress(pindexBest));
+        //     strMintWarning = strMintSyncMessage;
+        //     MilliSleep(10000);
+        // }
 
         while (pwallet->IsLocked())
         {
@@ -5306,8 +5306,8 @@ void BitcoinMiner(CWallet *pwallet, bool fProofOfStake)
             continue;
         }
 
-        printf("Running PeercoinMiner with %" PRIszu" transactions in block (%u bytes)\n", pblock->vtx.size(),
-               ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
+        // printf("Running PeercoinMiner with %" PRIszu" transactions in block (%u bytes)\n", pblock->vtx.size(),
+               // ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
 
         //
         // Pre-build hash buffers

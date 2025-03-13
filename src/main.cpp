@@ -36,8 +36,8 @@ unsigned int nTransactionsUpdated = 0;
 map<uint256, CBlockIndex*> mapBlockIndex;
 set<pair<COutPoint, unsigned int> > setStakeSeen;
 uint256 hashGenesisBlock = hashGenesisBlockOfficial;
-static CBigNum bnProofOfWorkLimit(~uint256(0) >> 32);
-static CBigNum bnInitialHashTarget(~uint256(0) >> 40);
+static CBigNum bnProofOfWorkLimit(~uint256(0) >> 15);
+static CBigNum bnInitialHashTarget(~uint256(0) >> 15);
 unsigned int nStakeMinAge = STAKE_MIN_AGE;
 int nCoinbaseMaturity = COINBASE_MATURITY_PPC;
 CBlockIndex* pindexGenesisBlock = NULL;
@@ -3209,25 +3209,6 @@ bool LoadBlockIndex()
 {
     GetMessageStart(pchMessageStart);
 
-    if (fTestNet)
-    {
-#ifdef TESTING
-        hashGenesisBlock = uint256("00008d0d88095d31f6dbdbcf80f6e51f71adf2be15740301f5e05cc0f3b2d2c0");
-        bnProofOfWorkLimit = CBigNum(~uint256(0) >> 15);
-        nStakeMinAge = 60 * 60 * 24; // test net min age is 1 day
-        nCoinbaseMaturity = 60;
-        bnInitialHashTarget = CBigNum(~uint256(0) >> 15);
-        nModifierInterval = 60 * 20; // test net modifier interval is 20 minutes
-#else
-        hashGenesisBlock = hashGenesisBlockTestNet;
-        bnProofOfWorkLimit = CBigNum(~uint256(0) >> 28);
-        nStakeMinAge = 60 * 60 * 24; // test net min age is 1 day
-        nCoinbaseMaturity = 60;
-        bnInitialHashTarget = CBigNum(~uint256(0) >> 29);
-        nModifierInterval = 60 * 20; // test net modifier interval is 20 minutes
-#endif
-    }
-
     printf("%s Network: genesis=0x%s nBitsLimit=0x%08x nBitsInitial=0x%08x nStakeMinAge=%d nCoinbaseMaturity=%d nModifierInterval=%d\n",
            fTestNet? "Test" : "Peercoin", hashGenesisBlock.ToString().substr(0, 20).c_str(), bnProofOfWorkLimit.GetCompact(), bnInitialHashTarget.GetCompact(), nStakeMinAge, nCoinbaseMaturity, nModifierInterval);
 
@@ -3274,7 +3255,7 @@ bool InitBlockIndex() {
         block.hashMerkleRoot = block.BuildMerkleTree();
         block.nVersion = 1;
         block.nTime    = 1345084287;
-        block.nBits    = bnProofOfWorkLimit.GetCompact();
+        block.nBits    = CBigNum(~uint256(0) >> 32).GetCompact();
         block.nNonce   = 2179302059u;
 
         if (fTestNet)

@@ -1,4 +1,5 @@
 /* Custom Colors */
+/* Red: #ff0000 */
 /* Green: #3cb054 1*/
 /* Dark Grey: #8C8C8C 2*/
 /* Light Grey: #E3E3E3 3*/
@@ -17,7 +18,7 @@ QMainWindow, QDialog {
 
 /* Global Styles - Buttons */
 QToolButton {
-    background: #3cb054;
+    background: #ff0000;
     color: #ffffff;
     border-radius: 20px;
     margin: 5px;
@@ -28,7 +29,7 @@ QToolButton {
 }
 
 QPushButton {
-    background: #3cb054;
+    background: #ff0000;
     color: #ffffff;
     border-radius: 20px;
     margin: 5px;
@@ -130,12 +131,12 @@ QTableView {
     alternate-background-color: #E3E3E3;
     color: #666666;
     gridline-color: #8C8C8C;
-    selection-background-color: #3cb054;
+    selection-background-color: #ff0000;
     border: 1px solid #8C8C8C;
  }
 
 QHeaderView::section {
-    background-color: #3cb054;
+    background-color: #ff0000;
     color: #ffffff;
     border-left: 0px;
     padding: 4px;
@@ -157,8 +158,8 @@ QToolTip {
 
 /* Toolbar */
 QToolBar {
-    border: 1px solid #3cb054;
-    background-color: #3cb054;
+    border: 1px solid #ff0000;
+    background-color: #ff0000;
 }
 
 QToolBar > QLabel {
@@ -202,7 +203,7 @@ QFrame {
 }
 
 #labelSendBalanceText {
-  color: #3cb054;
+  color: #ff0000;
   font-size: 20px;
   margin-right: 3px;
 }
@@ -229,7 +230,7 @@ QFrame QLabel#titleNumTransactions,
 QFrame QLabel#labelImmatureText,
 QFrame QLabel#labelUnconfirmedText,
 QFrame QLabel#labelTotalText {
-    color: #3cb054;
+    color: #ff0000;
     font-size: 20px;
 }
 
@@ -303,7 +304,7 @@ QLabel#logo {
 
 /* I think this is the top menu */
 QTabBar::tab {
-    background: #3cb054;
+    background: #ff0000;
     padding: 4px 20px;
     color: #ffffff;
     margin: 4px 1px 4px;

@@ -3264,18 +3264,6 @@ bool InitBlockIndex() {
             block.nNonce   = 122894938;
         }
 
-#ifdef TESTING
-        CBigNum bnTarget;
-        bnTarget.SetCompact(block.nBits);
-        while (block.GetHash() > bnTarget.getuint256())
-        {
-            if (block.nNonce % 1048576 == 0)
-                printf("n=%dM hash=%s\n", block.nNonce / 1048576,
-                       block.GetHash().ToString().c_str());
-            block.nNonce++;
-        }
-#endif
-
         //// debug print
         uint256 hash = block.GetHash();
         printf("%s\n", hash.ToString().c_str());
@@ -5218,15 +5206,8 @@ void BitcoinMiner(CWallet *pwallet, bool fProofOfStake)
             return;
         }
 
-        // while (vNodes.empty())
-        //     MilliSleep(1000);
-
-        // while (Checkpoints::GuessVerificationProgress(pindexBest)<0.996)
-        // {
-        //     printf("Minter thread sleeps while sync at %f\n",Checkpoints::GuessVerificationProgress(pindexBest));
-        //     strMintWarning = strMintSyncMessage;
-        //     MilliSleep(10000);
-        // }
+        while (vNodes.empty())
+            MilliSleep(1000);
 
         while (pwallet->IsLocked())
         {
@@ -5264,20 +5245,9 @@ void BitcoinMiner(CWallet *pwallet, bool fProofOfStake)
                 }
                 strMintWarning = "";
                 printf("CPUMiner : proof-of-stake block found %s\n", pblock->GetHash().ToString().c_str()); 
-#ifdef TESTING
-                SetThreadPriority(THREAD_PRIORITY_NORMAL);
-                bool fSuccess = CheckWork(pblock, *pwalletMain, reservekey);
-                SetThreadPriority(THREAD_PRIORITY_LOWEST);
-                if (fSuccess && fGenerateSingleBlock)
-                {
-                    hashSingleStakeBlock = pblock->GetHash();
-                    return;
-                }
-#else
                 SetThreadPriority(THREAD_PRIORITY_NORMAL);
                 CheckWork(pblock, *pwalletMain, reservekey);
                 SetThreadPriority(THREAD_PRIORITY_LOWEST);
-#endif
             }
             MilliSleep(500);
             continue;

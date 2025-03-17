@@ -192,14 +192,6 @@ std::string HelpMessage(HelpMessageMode hmm)
         "  -bantime=<n>           " + _("Number of seconds to keep misbehaving peers from reconnecting (default: 86400)") + "\n" +
         "  -maxreceivebuffer=<n>  " + _("Maximum per-connection receive buffer, <n>*1000 bytes (default: 5000)") + "\n" +
         "  -maxsendbuffer=<n>     " + _("Maximum per-connection send buffer, <n>*1000 bytes (default: 1000)") + "\n" +
-
-#ifdef USE_UPNP
-#if USE_UPNP
-        "  -upnp                  " + _("Use UPnP to map the listening port (default: 1 when listening)") + "\n" +
-#else
-        "  -upnp                  " + _("Use UPnP to map the listening port (default: 0)") + "\n" +
-#endif
-#endif
         "  -paytxfee=<amt>        " + _("Fee per KB to add to transactions you send") + "\n" +
         "  -debug=<category>      " + _("Output debugging information (default: 0, supplying <category> is optional)") + "\n" +
                                       _("If <category> is not supplied, output all debugging information.") + "\n" +
@@ -403,12 +395,6 @@ bool AppInit2(boost::thread_group& threadGroup)
     if (mapArgs.count("-proxy")) {
         // to protect privacy, do not listen by default if a proxy server is specified
         SoftSetBoolArg("-listen", false);
-    }
-
-    if (!GetBoolArg("-listen", true)) {
-        // do not map ports or try to retrieve public IP when not listening (pointless)
-        SoftSetBoolArg("-upnp", false);
-        // network discovery still needed to identify network (e.g. IPv4)
     }
 
     if (mapArgs.count("-externalip")) {

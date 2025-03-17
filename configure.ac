@@ -55,18 +55,6 @@ AC_ARG_ENABLE([mining],
   [disable_mining=$enableval],
   [disable_mining=no])
 
-AC_ARG_WITH([miniupnpc],
-  [AS_HELP_STRING([--with-miniupnpc],
-  [enable UPNP (default is yes if libminiupnpc is found)])],
-  [use_upnp=$withval],
-  [use_upnp=auto])
-
-AC_ARG_ENABLE([upnp-default],
-  [AS_HELP_STRING([--enable-upnp-default],
-  [if UPNP is enabled, turn it on at startup (default is no)])],
-  [use_upnp_default=$enableval],
-  [use_upnp_default=no])
-
 dnl enable ipv6 support
 AC_ARG_ENABLE([ipv6],
   [AS_HELP_STRING([--enable-ipv6],
@@ -396,11 +384,6 @@ if test x$enable_wallet != xno; then
     BITCOIN_FIND_BDB48
 fi
 
-dnl Check for libminiupnpc (optional)
-if test x$use_upnp != xno; then
-  AC_CHECK_LIB([miniupnpc], [main],, [have_miniupnpc=no])
-fi
-
 dnl Check for boost libs
 AX_BOOST_BASE
 AX_BOOST_SYSTEM
@@ -592,33 +575,6 @@ else
   fi
 fi
 
-dnl enable upnp support
-AC_MSG_CHECKING([if upnp should be enabled])
-if test x$have_miniupnpc = xno; then
-  if test x$use_upnp = xyes; then
-     AC_MSG_ERROR("upnp requested but cannot be built. use --without-miniupnpc")
-  fi
-  AC_MSG_RESULT(no)
-else
-  if test x$use_upnp != xno; then
-    AC_MSG_RESULT(yes)
-    AC_MSG_CHECKING([if upnp should be on by default])
-    use_upnp=yes
-    upnp_setting=0
-    if test x$use_upnp_default != xno; then
-      use_upnp_default=yes
-      upnp_setting=1
-    fi
-    AC_MSG_RESULT($use_upnp_default)
-    AC_DEFINE_UNQUOTED([USE_UPNP],[$upnp_setting],[Define to 1 for upnp runtime support])
-    if test x$TARGET_OS = xwindows; then
-      CPPFLAGS="$CPPFLAGS -DSTATICLIB"
-    fi
-  else
-    AC_MSG_RESULT(no)
-  fi
-fi
-
 dnl these are only used when qt is enabled
 if test x$bitcoin_enable_qt != xno; then
   CPPFLAGS="$CPPFLAGS -DQT_GUI"
@@ -705,7 +661,6 @@ AC_SUBST(LDFLAGS)
 AC_SUBST(PIC_FLAGS)
 AC_SUBST(PIE_FLAGS)
 
-AC_SUBST(USE_UPNP)
 AC_SUBST(USE_QRCODE)
 AC_SUBST(USE_IPV6)
 AC_SUBST(INCLUDES)

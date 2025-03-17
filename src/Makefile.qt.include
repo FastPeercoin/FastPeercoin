@@ -58,7 +58,6 @@ QT_TS = \
   qt/locale/bitcoin_zh_TW.ts
 
 QT_FORMS_UI = \
-  qt/forms/aboutdialog.ui \
   qt/forms/addressbookpage.ui \
   qt/forms/askpassphrasedialog.ui \
   qt/forms/editaddressdialog.ui \
@@ -75,7 +74,6 @@ QT_FORMS_UI = \
 QT_MOC_CPP = \
   qt/moc_macdockiconhandler.cpp \
   qt/moc_macnotificationhandler.cpp \
-  qt/moc_aboutdialog.cpp \
   qt/moc_addressbookpage.cpp \
   qt/moc_addresstablemodel.cpp \
   qt/moc_askpassphrasedialog.cpp \
@@ -126,7 +124,6 @@ QT_QRC_CPP = qt/qrc_bitcoin.cpp
 QT_QRC = qt/bitcoin.qrc
 
 PEERCOIN_QT_H = \
-  qt/aboutdialog.h \
   qt/addressbookpage.h \
   qt/addresstablemodel.h \
   qt/askpassphrasedialog.h \
@@ -230,7 +227,6 @@ PEERCOIN_QT_CPP = \
 
 if ENABLE_WALLET
 PEERCOIN_QT_CPP += \
-  qt/aboutdialog.cpp \
   qt/addressbookpage.cpp \
   qt/addresstablemodel.cpp \
   qt/askpassphrasedialog.cpp \
@@ -255,7 +251,6 @@ PEERCOIN_QT_CPP += \
 endif
 
 RES_IMAGES = \
-  qt/res/images/about.png \
   qt/res/images/splash.png \
   qt/res/images/splash_testnet.png
 

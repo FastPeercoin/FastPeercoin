@@ -12,7 +12,6 @@
 
 #include "transactiontablemodel.h"
 #include "optionsdialog.h"
-#include "aboutdialog.h"
 #include "clientmodel.h"
 #include "walletmodel.h"
 #include "walletframe.h"
@@ -65,7 +64,6 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     encryptWalletAction(0),
     decryptForMintingAction(0),
     changePassphraseAction(0),
-    aboutQtAction(0),
     trayIcon(0),
     notificator(0),
     rpcConsole(0),
@@ -205,12 +203,6 @@ void BitcoinGUI::createActions()
     quitAction->setStatusTip(tr("Quit application"));
     quitAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
     quitAction->setMenuRole(QAction::QuitRole);
-    aboutAction = new QAction(QIcon(":/icons/peercoin"), tr("&About Peercoin"), this);
-    aboutAction->setStatusTip(tr("Show information about Peercoin"));
-    aboutAction->setMenuRole(QAction::AboutRole);
-    aboutQtAction = new QAction(QIcon(":/trolltech/qmessagebox/images/qtlogo-64.png"), tr("About &Qt"), this);
-    aboutQtAction->setStatusTip(tr("Show information about Qt"));
-    aboutQtAction->setMenuRole(QAction::AboutQtRole);
     optionsAction = new QAction(QIcon(":/icons/options"), tr("&Options..."), this);
     optionsAction->setStatusTip(tr("Modify configuration options for Peercoin"));
     optionsAction->setMenuRole(QAction::PreferencesRole);
@@ -235,15 +227,7 @@ void BitcoinGUI::createActions()
     openRPCConsoleAction = new QAction(QIcon(":/icons/debugwindow"), tr("&Debug window"), this);
     openRPCConsoleAction->setStatusTip(tr("Open debugging and diagnostic console"));
 
-    openChatroomAction = new QAction(QIcon(":/icons/peercoin"), tr("&Chatroom"), this);
-    openChatroomAction->setStatusTip(tr("Open the Peercoin Discord in a web browser."));
-
-    openForumAction = new QAction(QIcon(":/icons/peercoin"), tr("&Forum"), this);
-    openForumAction->setStatusTip(tr("Open https://talk.peercoin.net in a web browser."));
-
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
-    connect(aboutAction, SIGNAL(triggered()), this, SLOT(aboutClicked()));
-    connect(aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
     connect(optionsAction, SIGNAL(triggered()), this, SLOT(optionsClicked()));
     connect(toggleHideAction, SIGNAL(triggered()), this, SLOT(toggleHidden()));
     connect(encryptWalletAction, SIGNAL(triggered(bool)), walletFrame, SLOT(encryptWallet(bool)));
@@ -252,8 +236,6 @@ void BitcoinGUI::createActions()
     connect(changePassphraseAction, SIGNAL(triggered()), walletFrame, SLOT(changePassphrase()));
     connect(signMessageAction, SIGNAL(triggered()), this, SLOT(gotoSignMessageTab()));
     connect(verifyMessageAction, SIGNAL(triggered()), this, SLOT(gotoVerifyMessageTab()));
-    connect(openChatroomAction, SIGNAL(triggered()), this, SLOT(openChatroom()));
-    connect(openForumAction, SIGNAL(triggered()), this, SLOT(openForum()));
 }
 
 void BitcoinGUI::createMenuBar()
@@ -283,11 +265,6 @@ void BitcoinGUI::createMenuBar()
 
     QMenu *help = appMenuBar->addMenu(tr("&Help"));
     help->addAction(openRPCConsoleAction);
-    help->addAction(openChatroomAction);
-    help->addAction(openForumAction);
-    help->addSeparator();
-    help->addAction(aboutAction);
-    help->addAction(aboutQtAction);
 }
 
 void BitcoinGUI::createToolBars()
@@ -329,9 +306,6 @@ void BitcoinGUI::setClientModel(ClientModel *clientModel)
             }
 
             toggleHideAction->setIcon(QIcon(":/icons/toolbar_testnet"));
-            aboutAction->setIcon(QIcon(":/icons/toolbar_testnet"));
-            openChatroomAction->setIcon(QIcon(":/icons/toolbar_testnet"));
-            openForumAction->setIcon(QIcon(":/icons/toolbar_testnet"));
         }
 
         // Create system tray menu (or setup the dock menu) that late to prevent users from calling actions,
@@ -460,13 +434,6 @@ void BitcoinGUI::optionsClicked()
     dlg.exec();
 }
 
-void BitcoinGUI::aboutClicked()
-{
-    AboutDialog dlg(this);
-    dlg.setModel(clientModel);
-    dlg.exec();
-}
-
 void BitcoinGUI::gotoOverviewPage()
 {
     if (walletFrame) walletFrame->gotoOverviewPage();
@@ -500,14 +467,6 @@ void BitcoinGUI::gotoSignMessageTab(QString addr)
 void BitcoinGUI::gotoVerifyMessageTab(QString addr)
 {
     if (walletFrame) walletFrame->gotoVerifyMessageTab(addr);
-}
-
-void BitcoinGUI::openChatroom() {
-    QDesktopServices::openUrl(QUrl("https://discord.gg/XPxfwtG"));
-}
-
-void BitcoinGUI::openForum() {
-    QDesktopServices::openUrl(QUrl("https://talk.peercoin.net"));
 }
 
 void BitcoinGUI::setNumConnections(int count)

@@ -42,8 +42,6 @@ libtool
 src/bitcoin-config.h
 src/bitcoin-config.h.in
 src/stamp-h1
-share/setup.nsi
-share/qt/Info.plist
 
 src/leveldb/.deps/
 
@@ -119,8 +117,6 @@ coverage_percent.txt
 linux-coverage-build
 linux-build
 win32-build
-qa/pull-tester/run-bitcoind-for-test.sh
-qa/pull-tester/build-tests.sh
 
 !src/leveldb-*/Makefile
 peercoin-qt

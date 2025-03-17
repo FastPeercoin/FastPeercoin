@@ -13,13 +13,7 @@ OSX_DMG=Peercoin-Qt.dmg
 OSX_DEPLOY_SCRIPT=$(top_srcdir)/contrib/macdeploy/macdeployqtplus
 OSX_FANCY_PLIST=$(top_srcdir)/contrib/macdeploy/fancy.plist
 OSX_INSTALLER_ICONS=$(top_srcdir)/src/qt/res/icons/peercoin.icns
-OSX_PLIST=$(top_srcdir)/share/qt/Info.plist #not installed
 OSX_QT_TRANSLATIONS = da,de,es,hu,ru,uk,zh_CN,zh_TW
-
-WINDOWS_PACKAGING = $(top_srcdir)/share/pixmaps/peercoin.ico \
-  $(top_srcdir)/share/pixmaps/nsis-header.bmp \
-  $(top_srcdir)/share/pixmaps/nsis-wizard.bmp \
-  $(top_srcdir)/doc/README_windows.txt
 
 OSX_PACKAGING = $(OSX_DEPLOY_SCRIPT) $(OSX_FANCY_PLIST) $(OSX_INSTALLER_ICONS) \
   $(top_srcdir)/contrib/macdeploy/background.png \
@@ -43,14 +37,6 @@ distcheck-hook:
 
 distcleancheck:
 	@:
-
-$(BITCOIN_WIN_INSTALLER): all-recursive
-	$(MKDIR_P) $(top_builddir)/release
-	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(BITCOIND_BIN) $(top_builddir)/release
-	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(BITCOIN_QT_BIN) $(top_builddir)/release
-	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(BITCOIN_CLI_BIN) $(top_builddir)/release
-	@test -f $(MAKENSIS) && $(MAKENSIS) $(top_builddir)/share/setup.nsi || \
-	  echo error: could not build $@
 
 $(BITCOIND_BIN):
 	make -C $(top_srcdir)/src peercoind$(EXEEXT)
@@ -146,12 +132,6 @@ test_bitcoin.info: baseline_filtered_combined.info
 test_bitcoin_filtered.info: test_bitcoin.info
 	$(LCOV) -r $< "/usr/include/*" -o $@
 
-block_test.info: test_bitcoin_filtered.info
-	-@TIMEOUT=15 qa/pull-tester/run-bitcoind-for-test.sh $(JAVA) -Xmx2G -jar $(JAVA_COMPARISON_TOOL) 1 18444
-	$(LCOV) -c -d $(abs_builddir)/src --t BitcoinJBlockTest -o $@
-	$(LCOV) -z -d $(abs_builddir)/src
-	$(LCOV) -z -d $(abs_builddir)/src/leveldb
-
 block_test_filtered.info: block_test.info
 	$(LCOV) -r $< "/usr/include/*" -o $@
 
@@ -172,13 +152,6 @@ total.coverage/.dirstamp: total_coverage.info
 cov: test_bitcoin.coverage/.dirstamp total.coverage/.dirstamp
 
 endif
-
-if USE_COMPARISON_TOOL
-check-local:
-	@qa/pull-tester/run-bitcoind-for-test.sh $(JAVA) -Xmx2G -jar $(JAVA_COMPARISON_TOOL) 1 18444
-endif
-
-EXTRA_DIST = $(top_srcdir)/share/genbuild.sh qa/pull-tester/pull-tester.sh $(WINDOWS_PACKAGING) $(OSX_PACKAGING)
 
 CLEANFILES = $(OSX_DMG) $(BITCOIN_WIN_INSTALLER)
 

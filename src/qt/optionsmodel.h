@@ -17,8 +17,6 @@ public:
     explicit OptionsModel(QObject *parent = 0);
 
     enum OptionID {
-        MinimizeToTray,    // bool
-        MinimizeOnClose,   // bool
         ProxyUse,          // bool
         ProxyIP,           // QString
         ProxyPort,         // int
@@ -39,8 +37,6 @@ public:
     bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
 
     /* Explicit getters */
-    bool getMinimizeToTray() { return fMinimizeToTray; }
-    bool getMinimizeOnClose() { return fMinimizeOnClose; }
     int getDisplayUnit() { return nDisplayUnit; }
     QString getLanguage() { return language; }
 
@@ -48,8 +44,6 @@ public:
 
 private:
     int nDisplayUnit;
-    bool fMinimizeToTray;
-    bool fMinimizeOnClose;
 
     bool fCoinControlFeatures;
 

@@ -47,8 +47,6 @@ void OptionsModel::Init()
 
     // These are Qt-only settings:
     nDisplayUnit = settings.value("nDisplayUnit", BitcoinUnits::BTC).toInt();
-    fMinimizeToTray = settings.value("fMinimizeToTray", false).toBool();
-    fMinimizeOnClose = settings.value("fMinimizeOnClose", false).toBool();
     fCoinControlFeatures = settings.value("fCoinControlFeatures", false).toBool();
     language = settings.value("language", "").toString();
 
@@ -86,7 +84,7 @@ bool OptionsModel::Upgrade()
         }
     }
     QList<QString> boolOptions;
-    boolOptions << "fMinimizeToTray" << "fMinimizeOnClose" << "fUseProxy";
+    boolOptions << "fUseProxy";
     foreach(QString key, boolOptions)
     {
         bool value = false;
@@ -134,10 +132,6 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
         QSettings settings;
         switch(index.row())
         {
-        case MinimizeToTray:
-            return QVariant(fMinimizeToTray);
-        case MinimizeOnClose:
-            return QVariant(fMinimizeOnClose);
         case ProxyUse: {
             proxyType proxy;
             return QVariant(GetProxy(NET_IPV4, proxy));
@@ -184,14 +178,6 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
         QSettings settings;
         switch(index.row())
         {
-        case MinimizeToTray:
-            fMinimizeToTray = value.toBool();
-            settings.setValue("fMinimizeToTray", fMinimizeToTray);
-            break;
-        case MinimizeOnClose:
-            fMinimizeOnClose = value.toBool();
-            settings.setValue("fMinimizeOnClose", fMinimizeOnClose);
-            break;
         case ProxyUse:
             settings.setValue("fUseProxy", value.toBool());
             successful = ApplyProxySettings();

@@ -123,12 +123,6 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->proxyPort, OptionsModel::ProxyPort);
     mapper->addMapping(ui->socksVersion, OptionsModel::ProxySocksVersion);
 
-    /* Window */
-#ifndef Q_OS_MAC
-    mapper->addMapping(ui->minimizeToTray, OptionsModel::MinimizeToTray);
-    mapper->addMapping(ui->minimizeOnClose, OptionsModel::MinimizeOnClose);
-#endif
-
     /* Display */
     mapper->addMapping(ui->lang, OptionsModel::Language);
     mapper->addMapping(ui->unit, OptionsModel::DisplayUnit);

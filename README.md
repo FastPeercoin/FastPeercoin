@@ -22,7 +22,7 @@ https://releases.ubuntu.com/14.04/ubuntu-14.04.6-desktop-amd64.iso
 
 ```
 sudo apt update
-sudo apt install git build-essential
+sudo apt install git build-essential autoconf pkg-config libtool
 sudo apt install libboost-all-dev libssl-dev libdb++-dev
 sudo apt install qtbase5-dev qttools5-dev qttools5-dev-tools 
 ```

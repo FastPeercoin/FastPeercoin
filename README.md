@@ -4,9 +4,9 @@ FastPeercoin
 ### What is FastPeercoin?
 It's Peercoin, but block times are sped way up.
 
-It's experimental af
+FastPeercoin aims to simplify the code as much as possible.
 
-But it's new and shiny and you can get in on the ground floor!
+It's new and shiny and you can get in on the ground floor!
 
 CPU mining still readily available (while supplies last).
 

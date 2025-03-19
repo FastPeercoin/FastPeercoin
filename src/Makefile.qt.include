@@ -64,7 +64,6 @@ QT_FORMS_UI = \
   qt/forms/optionsdialog.ui \
   qt/forms/overviewpage.ui \
   qt/forms/qrcodedialog.ui \
-  qt/forms/rpcconsole.ui \
   qt/forms/sendcoinsdialog.ui \
   qt/forms/sendcoinsentry.ui \
   qt/forms/signverifymessagedialog.ui \
@@ -90,7 +89,6 @@ QT_MOC_CPP = \
   qt/moc_qrcodedialog.cpp \
   qt/moc_qvalidatedlineedit.cpp \
   qt/moc_qvaluecombobox.cpp \
-  qt/moc_rpcconsole.cpp \
   qt/moc_sendcoinsdialog.cpp \
   qt/moc_sendcoinsentry.cpp \
   qt/moc_signverifymessagedialog.cpp \
@@ -104,12 +102,10 @@ QT_MOC_CPP = \
   qt/moc_walletmodel.cpp \
   qt/moc_walletview.cpp \
   qt/moc_walletstack.cpp \
-  qt/moc_rpcconsole.cpp \
   qt/moc_overviewpage.cpp
 
 QT_MOC = qt/bitcoin.moc \
-  qt/overviewpage.moc \
-  qt/rpcconsole.moc
+  qt/overviewpage.moc
 
 QT_QRC_CPP = qt/qrc_bitcoin.cpp
 QT_QRC = qt/bitcoin.qrc
@@ -135,7 +131,6 @@ PEERCOIN_QT_H = \
   qt/qrcodedialog.h \
   qt/qvalidatedlineedit.h \
   qt/qvaluecombobox.h \
-  qt/rpcconsole.h \
   qt/sendcoinsdialog.h \
   qt/sendcoinsentry.h \
   qt/signverifymessagedialog.h \
@@ -206,7 +201,6 @@ PEERCOIN_QT_CPP = \
   qt/optionsmodel.cpp \
   qt/qvalidatedlineedit.cpp \
   qt/qvaluecombobox.cpp \
-  qt/rpcconsole.cpp \
   qt/splashscreen.cpp 
 
 if ENABLE_WALLET

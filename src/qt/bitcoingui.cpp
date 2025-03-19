@@ -21,7 +21,6 @@
 #include "guiconstants.h"
 #include "notificator.h"
 #include "guiutil.h"
-#include "rpcconsole.h"
 #include "ui_interface.h"
 #include "wallet.h"
 #include "init.h"
@@ -66,7 +65,6 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     changePassphraseAction(0),
     trayIcon(0),
     notificator(0),
-    rpcConsole(0),
     prevBlocks(0)
 {
     restoreWindowGeometry();
@@ -130,9 +128,6 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     statusBar()->addPermanentWidget(frameBlocks);
 
     syncIconMovie = new QMovie(":/movies/update_spinner", "mng", this);
-
-    rpcConsole = new RPCConsole(this);
-    connect(openRPCConsoleAction, SIGNAL(triggered()), rpcConsole, SLOT(show()));
 
     // Install event filter to be able to catch status tip events (QEvent::StatusTip)
     this->installEventFilter(this);
@@ -222,9 +217,6 @@ void BitcoinGUI::createActions()
     verifyMessageAction = new QAction(QIcon(":/icons/verify"), tr("&Verify message..."), this);
     verifyMessageAction->setStatusTip(tr("Verify messages to ensure they were signed with specified Peercoin addresses"));
 
-    openRPCConsoleAction = new QAction(QIcon(":/icons/debugwindow"), tr("&Debug window"), this);
-    openRPCConsoleAction->setStatusTip(tr("Open debugging and diagnostic console"));
-
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     connect(optionsAction, SIGNAL(triggered()), this, SLOT(optionsClicked()));
     connect(toggleHideAction, SIGNAL(triggered()), this, SLOT(toggleHidden()));
@@ -258,9 +250,6 @@ void BitcoinGUI::createMenuBar()
     settings->addAction(changePassphraseAction);
     settings->addSeparator();
     settings->addAction(optionsAction);
-
-    QMenu *help = appMenuBar->addMenu(tr("&Help"));
-    help->addAction(openRPCConsoleAction);
 }
 
 void BitcoinGUI::createToolBars()
@@ -298,7 +287,6 @@ void BitcoinGUI::setClientModel(ClientModel *clientModel)
         // Receive and report messages from network/worker thread
         connect(clientModel, SIGNAL(message(QString,QString,unsigned int)), this, SLOT(message(QString,QString,unsigned int)));
 
-        rpcConsole->setClientModel(clientModel);
         walletFrame->setClientModel(clientModel);
     }
 }
@@ -361,14 +349,10 @@ void BitcoinGUI::createTrayIconMenu()
     trayIconMenu->addAction(verifyMessageAction);
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(optionsAction);
-    trayIconMenu->addAction(openRPCConsoleAction);
-#ifndef Q_OS_MAC // This is built-in on Mac
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(quitAction);
-#endif
 }
 
-#ifndef Q_OS_MAC
 void BitcoinGUI::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 {
     if(reason == QSystemTrayIcon::Trigger)
@@ -377,7 +361,6 @@ void BitcoinGUI::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
         toggleHideAction->trigger();
     }
 }
-#endif
 
 void BitcoinGUI::saveWindowGeometry()
 {

@@ -22,7 +22,6 @@ class AddressBookPage;
 class SendCoinsDialog;
 class SignVerifyMessageDialog;
 class Notificator;
-class RPCConsole;
 
 class CWalletManager;
 

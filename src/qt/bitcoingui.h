@@ -18,7 +18,6 @@ class AddressBookPage;
 class SendCoinsDialog;
 class SignVerifyMessageDialog;
 class Notificator;
-class RPCConsole;
 
 class CWallet;
 
@@ -101,12 +100,10 @@ private:
     QAction *decryptForMintingAction;
     QAction *changePassphraseAction;
     QAction *aboutQtAction;
-    QAction *openRPCConsoleAction;
 
     QSystemTrayIcon *trayIcon;
     Notificator *notificator;
     TransactionView *transactionView;
-    RPCConsole *rpcConsole;
 
     QMovie *syncIconMovie;
     /** Keep track of previous number of blocks, to detect progress */

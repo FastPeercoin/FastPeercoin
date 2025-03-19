@@ -17,7 +17,6 @@ class OverviewPage;
 class AddressBookPage;
 class SendCoinsDialog;
 class SignVerifyMessageDialog;
-class RPCConsole;
 
 QT_BEGIN_NAMESPACE
 class QLabel;

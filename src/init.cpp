@@ -10,7 +10,6 @@
 
 #include "txdb.h"
 #include "addrman.h"
-#include "rpcserver.h"
 #include "net.h"
 #include "init.h"
 #include "util.h"
@@ -100,7 +99,6 @@ void Shutdown()
 
     RenameThread("peercoin-shutoff");
     nTransactionsUpdated++;
-    StopRPCThreads();
     bitdb.Flush(false);
     StopNode();
     {
@@ -968,9 +966,6 @@ bool AppInit2(boost::thread_group& threadGroup)
 #endif
 
     StartNode(threadGroup);
-
-    if (fServer)
-        StartRPCThreads();
 
 #ifndef DISABLE_MINING
     // Generate coins in the background

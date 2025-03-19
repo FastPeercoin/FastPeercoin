@@ -8,13 +8,6 @@ bin
 
 *.tar.gz
 
-*.exe
-src/*.exe
-src/*/*.exe
-src/peercoin
-src/peercoin-cli
-src/peercoind
-
 # autoreconf
 Makefile.in
 aclocal.m4

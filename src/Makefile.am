@@ -27,22 +27,13 @@ endif
 
 noinst_LIBRARIES = \
   libpeercoin_server.a \
-  libpeercoin_common.a \
-  libpeercoin_cli.a
+  libpeercoin_common.a
 if ENABLE_WALLET
 noinst_LIBRARIES += libpeercoin_wallet.a
 endif
 
 bin_PROGRAMS =
 TESTS =
-
-if BUILD_BITCOIND
-  bin_PROGRAMS += peercoind
-endif
-
-if BUILD_BITCOIN_CLI
-  bin_PROGRAMS += peercoin-cli
-endif
 
 .PHONY: FORCE
 # bitcoin core #
@@ -52,9 +43,6 @@ BITCOIN_CORE_H = \
   allocators.h \
   base58.h \
   bignum.h \
-  rpcclient.h \
-  rpcprotocol.h \
-  rpcserver.h \
   bloom.h \
   checkqueue.h \
   clientversion.h \
@@ -105,7 +93,6 @@ version.o: obj/build.h
 libpeercoin_server_a_SOURCES = \
   addrman.cpp \
   alert.cpp \
-  rpcserver.cpp \
   bloom.cpp \
   crypter.cpp \
   init.cpp \
@@ -115,24 +102,16 @@ libpeercoin_server_a_SOURCES = \
   main.cpp \
   net.cpp \
   noui.cpp \
-  rpcblockchain.cpp \
-  rpcnet.cpp \
-  rpcrawtransaction.cpp \
-  rpcserver.cpp \
   txdb.cpp \
   $(JSON_H) \
   $(BITCOIN_CORE_H)
 
 libpeercoin_wallet_a_SOURCES = \
   db.cpp \
-  rpcdump.cpp \
-  rpcmining.cpp \
-  rpcminting.cpp \
   script.cpp \
   kernelrecord.cpp \
   wallet.cpp \
   walletdb.cpp \
-  rpcwallet.cpp \
   $(BITCOIN_CORE_H)
 
 libpeercoin_common_a_SOURCES = \
@@ -140,48 +119,12 @@ libpeercoin_common_a_SOURCES = \
   key.cpp \
   netbase.cpp \
   protocol.cpp \
-  rpcprotocol.cpp \
   sync.cpp \
   util.cpp \
   version.cpp \
   $(BITCOIN_CORE_H)
 
-libpeercoin_cli_a_SOURCES = \
-  rpcclient.cpp \
-  $(BITCOIN_CORE_H)
-
 nodist_libpeercoin_common_a_SOURCES = $(top_srcdir)/src/obj/build.h
-#
-
-# peercoind binary #
-peercoind_LDADD = \
-  libpeercoin_server.a \
-  libpeercoin_cli.a \
-  libpeercoin_common.a \
-  $(LIBLEVELDB) \
-  $(LIBMEMENV) \
-  $(BOOST_LIBS)
-if ENABLE_WALLET
-peercoind_LDADD += libpeercoin_wallet.a
-endif
-peercoind_SOURCES = bitcoind.cpp
-peercoind_LDFLAGS = $(AM_LDFLAGS)
-
-if TARGET_WINDOWS
-peercoind_SOURCES += bitcoind-res.rc
-endif
-
-AM_CPPFLAGS += $(BDB_CPPFLAGS)
-peercoind_LDADD += $(BDB_LIBS)
-
-# bitcoin-cli binary #
-peercoin_cli_LDADD = libpeercoin_cli.a libpeercoin_common.a $(BOOST_LIBS)
-peercoin_cli_SOURCES = bitcoin-cli.cpp
-peercoin_cli_LDFLAGS = $(AM_LDFLAGS)
-
-if TARGET_WINDOWS
-peercoin_cli_SOURCES += bitcoin-cli-res.rc
-endif
 
 CLEANFILES = leveldb/libleveldb.a leveldb/libmemenv.a *.gcda *.gcno
 
@@ -204,7 +147,6 @@ clean-local:
 LIBPEERCOIN_SERVER=libpeercoin_server.a
 LIBPEERCOIN_WALLET=libpeercoin_wallet.a
 LIBPEERCOIN_COMMON=libpeercoin_common.a
-LIBPEERCOIN_CLI=libpeercoin_cli.a
 LIBPEERCOINQT=qt/libpeercoinqt.a
 
 if ENABLE_QT

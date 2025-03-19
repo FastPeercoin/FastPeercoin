@@ -113,7 +113,6 @@ Value getmininginfo(const Array& params, bool fHelp)
 #endif // DISABLE_MINING
     obj.push_back(Pair("networkghps",   getnetworkghps(params, false)));
     obj.push_back(Pair("pooledtx",      (uint64_t)mempool.size()));
-    obj.push_back(Pair("testnet",       fTestNet));
     return obj;
 }
 

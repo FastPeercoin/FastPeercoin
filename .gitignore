@@ -14,9 +14,6 @@ src/*/*.exe
 src/peercoin
 src/peercoin-cli
 src/peercoind
-src/test_peercoin
-src/test/test_peercoin
-src/qt/test/test_peercoin-qt
 
 # autoreconf
 Makefile.in
@@ -45,20 +42,11 @@ src/stamp-h1
 
 src/leveldb/.deps/
 
-src/test/.deps
-src/test/.dirstamp
-
 src/qt/.deps/
 src/qt/.dirstamp
 src/qt/*.moc
 src/qt/moc_*.cpp
 src/qt/forms/ui_*.h
-
-src/qt/test/.deps/
-src/qt/test/.dirstamp
-src/qt/test/moc*.cpp
-src/qt/res/.deps/
-src/qt/res/.dirstamp
 
 .*.swp
 *.*~*
@@ -97,10 +85,6 @@ qrc_*.cpp
 
 # Qt creator
 *.pro.user
-
-# Mac specific
-.DS_Store
-build
 
 # mingw / Windows
 release/

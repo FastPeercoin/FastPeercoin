@@ -1074,16 +1074,9 @@ static const char *strMainNetDNSSeed[][2] = {
     {NULL, NULL}
 };
 
-static const char *strTestNetDNSSeed[][2] = {
-    {"tseedpeercoin", "tseed.peercoin.net"},
-    {"tseedpeercoin2", "tseed2.peercoin.net"},
-    {"tlibraryseed", "tseed.peercoin-library.org"},
-    {NULL, NULL}
-};
-
 void ThreadDNSAddressSeed()
 {
-    static const char *(*strDNSSeed)[2] = fTestNet ? strTestNetDNSSeed : strMainNetDNSSeed;
+    static const char *(*strDNSSeed)[2] = strMainNetDNSSeed;
 
     int found = 0;
 
@@ -1194,7 +1187,7 @@ void ThreadOpenConnections()
         boost::this_thread::interruption_point();
 
         // Add seed nodes if IRC isn't working
-        if (addrman.size()==0 && (GetTime() - nStart > 60) && !fTestNet)
+        if (addrman.size()==0 && (GetTime() - nStart > 60))
         {
             std::vector<CAddress> vAdd;
             for (unsigned int i = 0; i < ARRAYLEN(pnSeed); i++)

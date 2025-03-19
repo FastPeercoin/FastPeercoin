@@ -37,8 +37,6 @@ public:
 
     QDateTime getLastBlockDate() const;
 
-    //! Return true if client connected to testnet
-    bool isTestNet() const;
     //! Return true if core is doing initial block download
     bool inInitialBlockDownload() const;
     //! Return true if core is importing blocks

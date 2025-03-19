@@ -12,20 +12,15 @@ using namespace std;
 
 // Protocol switch time of v0.3 kernel protocol
 unsigned int nProtocolV03SwitchTime     = 1363800000;
-unsigned int nProtocolV03TestSwitchTime = 1359781000;
 // Protocol switch time of v0.4 kernel protocol
 unsigned int nProtocolV04SwitchTime     = 1399300000;
-unsigned int nProtocolV04TestSwitchTime = 1395700000;
 // Protocol switch time of v0.5 kernel protocol
 unsigned int nProtocolV05SwitchTime     = 1461700000;
-unsigned int nProtocolV05TestSwitchTime = 1447700000;
 // Protocol switch time of v0.6 kernel protocol
 // supermajority hardfork: actual fork will happen later than switch time
 const unsigned int nProtocolV06SwitchTime     = 1513050000; // Tue 12 Dec 03:40:00 UTC 2017
-const unsigned int nProtocolV06TestSwitchTime = 1508198400; // Tue 17 Oct 00:00:00 UTC 2017
 // Protocol switch time for 0.7 kernel protocol
 const unsigned int nProtocolV07SwitchTime     = 1552392000; // Tue 12 Mar 12:00:00 UTC 2019
-const unsigned int nProtocolV07TestSwitchTime = 1541505600; // Tue 06 Nov 12:00:00 UTC 2018
 
 
 // Modifier interval: time to elapse before new modifier is computed
@@ -35,34 +30,33 @@ unsigned int nModifierInterval = MODIFIER_INTERVAL;
 // Whether the given coinstake is subject to new v0.3 protocol
 bool IsProtocolV03(unsigned int nTimeCoinStake)
 {
-    return (nTimeCoinStake >= (fTestNet? nProtocolV03TestSwitchTime : nProtocolV03SwitchTime));
+    return (nTimeCoinStake >= nProtocolV03SwitchTime);
 }
 
 // Whether the given block is subject to new v0.4 protocol
 bool IsProtocolV04(unsigned int nTimeBlock)
 {
-    return (nTimeBlock >= (fTestNet? nProtocolV04TestSwitchTime : nProtocolV04SwitchTime));
+    return (nTimeBlock >= nProtocolV04SwitchTime);
 }
 
 // Whether the given transaction is subject to new v0.5 protocol
 bool IsProtocolV05(unsigned int nTimeTx)
 {
-    return (nTimeTx >= (fTestNet? nProtocolV05TestSwitchTime : nProtocolV05SwitchTime));
+    return (nTimeTx >= nProtocolV05SwitchTime);
 }
 
 // Whether a given block is subject to new v0.6 protocol
 // Test against previous block index! (always available)
 bool IsProtocolV06(const CBlockIndex* pindexPrev)
 {
-  if (pindexPrev->nTime < (fTestNet? nProtocolV06TestSwitchTime : nProtocolV06SwitchTime))
+  if (pindexPrev->nTime < nProtocolV06SwitchTime)
     return false;
 
-  // if 900 of the last 1,000 blocks are version 2 or greater (90/100 if testnet):
+  // if 900 of the last 1,000 blocks are version 2 or greater:
   // Soft-forking PoS can be dangerous if the super majority is too low
   // The stake majority will decrease after the fork
   // since only coindays of updated nodes will get destroyed.
-  if ((!fTestNet && CBlockIndex::IsSuperMajority(2, pindexPrev, 900, 1000)) ||
-      (fTestNet && CBlockIndex::IsSuperMajority(2, pindexPrev, 90, 100)))
+  if (CBlockIndex::IsSuperMajority(2, pindexPrev, 900, 1000))
     return true;
 
   return false;
@@ -71,7 +65,7 @@ bool IsProtocolV06(const CBlockIndex* pindexPrev)
 // Whether a given transaction is subject to new v0.7 protocol
 bool IsProtocolV07(unsigned int nTimeTx)
 {
-    return (nTimeTx >= (fTestNet? nProtocolV07TestSwitchTime : nProtocolV07SwitchTime));
+    return (nTimeTx >= nProtocolV07SwitchTime);
 }
 
 // Get the last stake modifier and its generation time from a given block

@@ -17,17 +17,14 @@
 
 #define PPCOIN_PORT  9999
 #define RPC_PORT     10000
-#define TESTNET_PORT 9903
-#define TESTNET_RPC_PORT 9904
 
-extern bool fTestNet;
 extern unsigned char pchMessageStart[4];
 
 void GetMessageStart(unsigned char pchMessageStart[], bool fPersistent = false);
 
-static inline unsigned short GetDefaultPort(const bool testnet = fTestNet)
+static inline unsigned short GetDefaultPort()
 {
-    return testnet ? TESTNET_PORT : PPCOIN_PORT;
+    return PPCOIN_PORT;
 }
 
 

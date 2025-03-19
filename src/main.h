@@ -75,7 +75,6 @@ static const int STAKE_MAX_AGE = 60 * 60 * 24 * 90; // stake age of full weight
 static const int MAX_SCRIPTCHECK_THREADS = 16;
 
 static const uint256 hashGenesisBlockOfficial("0x0000000032fe677166d54963b62a4677d8957e87c508eaa4fd7eb1c880cd27e3");
-static const uint256 hashGenesisBlockTestNet("0x00000001f757bb737f6596503e17cd17b0658ce630cc727c0cca81aec47c9f06");
 
 static const int64 nMaxClockDrift = 2 * 60 * 60;        // two hours
 

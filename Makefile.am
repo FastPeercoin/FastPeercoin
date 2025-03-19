@@ -8,19 +8,6 @@ BITCOIND_BIN=$(top_builddir)/src/peercoind$(EXEEXT)
 BITCOIN_QT_BIN=$(top_builddir)/src/qt/peercoin-qt$(EXEEXT)
 BITCOIN_WIN_INSTALLER=$(PACKAGE)-$(PACKAGE_VERSION)-win32-setup$(EXEEXT)
 
-OSX_APP=Peercoin-Qt.app
-OSX_DMG=Peercoin-Qt.dmg
-OSX_DEPLOY_SCRIPT=$(top_srcdir)/contrib/macdeploy/macdeployqtplus
-OSX_FANCY_PLIST=$(top_srcdir)/contrib/macdeploy/fancy.plist
-OSX_INSTALLER_ICONS=$(top_srcdir)/src/qt/res/icons/peercoin.icns
-OSX_QT_TRANSLATIONS = da,de,es,hu,ru,uk,zh_CN,zh_TW
-
-OSX_PACKAGING = $(OSX_DEPLOY_SCRIPT) $(OSX_FANCY_PLIST) $(OSX_INSTALLER_ICONS) \
-  $(top_srcdir)/contrib/macdeploy/background.png \
-  $(top_srcdir)/contrib/macdeploy/DS_Store \
-  $(top_srcdir)/contrib/macdeploy/detached-sig-apply.sh \
-  $(top_srcdir)/contrib/macdeploy/detached-sig-create.sh
-
 COVERAGE_INFO = baseline_filtered_combined.info baseline.info block_test.info \
   leveldb_baseline.info test_bitcoin_filtered.info total_coverage.info \
   baseline_filtered.info block_test_filtered.info \
@@ -43,68 +30,6 @@ $(BITCOIND_BIN):
 
 $(BITCOIN_QT_BIN):
 	make -C $(top_srcdir)/src/qt peercoin-qt$(EXEEXT)
-
-
-$(OSX_APP)/Contents/PkgInfo:
-	$(MKDIR_P) $(@D)
-	@echo "APPL????" > $@
-
-$(OSX_APP)/Contents/Resources/empty.lproj:
-	$(MKDIR_P) $(@D)
-	@touch $@
-
-$(OSX_APP)/Contents/Info.plist: $(OSX_PLIST)
-	$(MKDIR_P) $(@D)
-	$(INSTALL_DATA) $< $@
-
-$(OSX_APP)/Contents/Resources/peercoin.icns: $(OSX_INSTALLER_ICONS)
-	$(MKDIR_P) $(@D)
-	$(INSTALL_DATA) $< $@
-
-$(OSX_APP)/Contents/MacOS/Peercoin-Qt: $(BITCOIN_QT_BIN)
-	$(MKDIR_P) $(@D)
-	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM)  $< $@
-
-OSX_APP_BUILT=$(OSX_APP)/Contents/PkgInfo $(OSX_APP)/Contents/Resources/empty.lproj \
-  $(OSX_APP)/Contents/Resources/peercoin.icns $(OSX_APP)/Contents/Info.plist \
-  $(OSX_APP)/Contents/MacOS/Peercoin-Qt
-
-if BUILD_DARWIN
-$(OSX_DMG): $(OSX_APP_BUILT) $(OSX_PACKAGING)
-	$(OSX_DEPLOY_SCRIPT) $(OSX_APP) -add-qt-tr $(OSX_QT_TRANSLATIONS) -dmg -fancy $(OSX_FANCY_PLIST) -verbose 2
-
-deploydir: $(OSX_DMG)
-else
-APP_DIST_DIR=$(top_builddir)/dist
-APP_DIST_EXTRAS=$(APP_DIST_DIR)/.background/background.png $(APP_DIST_DIR)/.DS_Store $(APP_DIST_DIR)/Applications
-
-$(APP_DIST_DIR)/Applications:
-	@rm -f $@
-	@cd $(@D); $(LN_S) /Applications $(@F)
-
-$(APP_DIST_EXTRAS): $(APP_DIST_DIR)/$(OSX_APP)/Contents/MacOS/Peercoin-Qt
-
-$(OSX_DMG): $(APP_DIST_EXTRAS)
-	$(GENISOIMAGE) -no-cache-inodes -D -l -probe -V "Peercoin-Qt" -no-pad -r -apple -o $@ dist
-
-$(APP_DIST_DIR)/.background/background.png:
-	$(MKDIR_P) $(@D)
-	$(INSTALL) $(top_srcdir)/contrib/macdeploy/background.png $@
-$(APP_DIST_DIR)/.DS_Store:
-	$(INSTALL) $(top_srcdir)/contrib/macdeploy/DS_Store $@
-
-$(APP_DIST_DIR)/$(OSX_APP)/Contents/MacOS/Peercoin-Qt: $(OSX_APP_BUILT) $(OSX_PACKAGING)
-	INSTALLNAMETOOL=$(INSTALLNAMETOOL)  OTOOL=$(OTOOL) STRIP=$(STRIP) $(OSX_DEPLOY_SCRIPT) $(OSX_APP) -translations-dir=$(QT_TRANSLATION_DIR) -add-qt-tr $(OSX_QT_TRANSLATIONS) -verbose 2
-
-deploydir: $(APP_DIST_EXTRAS)
-endif
-
-if TARGET_DARWIN
-deploy: $(OSX_DMG)
-endif
-if TARGET_WINDOWS
-deploy: $(BITCOIN_WIN_INSTALLER)
-endif
 
 if USE_LCOV
 
@@ -153,9 +78,7 @@ cov: test_bitcoin.coverage/.dirstamp total.coverage/.dirstamp
 
 endif
 
-CLEANFILES = $(OSX_DMG) $(BITCOIN_WIN_INSTALLER)
-
-.INTERMEDIATE: $(OSX_APP_BUILT) $(COVERAGE_INFO)
+.INTERMEDIATE: $(COVERAGE_INFO)
 
 clean-local:
-	rm -rf test_bitcoin.coverage/ total.coverage/ $(OSX_APP)
+	rm -rf test_bitcoin.coverage/ total.coverage/

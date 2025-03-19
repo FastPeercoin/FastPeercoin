@@ -76,16 +76,6 @@ AC_ARG_ENABLE(debug,
     [use_debug=yes])
     AC_MSG_CHECKING([if compiling with debugging symbols])
 
-AC_ARG_ENABLE(tests,
-    AS_HELP_STRING([--enable-tests],[compile tests (default is yes)]),
-    [use_tests=$enableval],
-    [use_tests=yes])
-
-AC_ARG_WITH([comparison-tool],
-    AS_HELP_STRING([with-comparison-tool],[path to java comparison tool (requires --enable-tests)]),
-    [use_comparison_tool=$withval],
-    [use_comparison_tool=no])
-
 AC_ARG_WITH([qrencode],
   [AS_HELP_STRING([--with-qrencode],
   [enable QR code support (default is yes if qt is enabled and libqrencode is found)])],
@@ -392,10 +382,6 @@ AX_BOOST_PROGRAM_OPTIONS
 AX_BOOST_THREAD
 AX_BOOST_CHRONO
 
-if test x$use_tests = xyes; then
-  AX_BOOST_UNIT_TEST_FRAMEWORK
-fi
-
 BOOST_LIBS="$BOOST_LDFLAGS $BOOST_SYSTEM_LIB $BOOST_FILESYSTEM_LIB $BOOST_PROGRAM_OPTIONS_LIB $BOOST_THREAD_LIB"
 BOOST_INCLUDES="$BOOST_CPPFLAGS"
 
@@ -493,7 +479,7 @@ AC_MSG_CHECKING([if bitcoin-cli should be enabled])
 AM_CONDITIONAL([BUILD_BITCOIN_CLI], [test x$build_bitcoin_cli = xyes])
 AC_MSG_RESULT($build_bitcoin_cli)
 
-dnl sets $bitcoin_enable_qt, $bitcoin_enable_qt_test, $bitcoin_enable_qt_dbus
+dnl sets $bitcoin_enable_qt, $bitcoin_enable_qt_dbus
 BITCOIN_QT_CONFIGURE([$use_pkgconfig], [qt5])
 
 if test x$use_ipv6 = xyes; then
@@ -607,23 +593,13 @@ if test x$bitcoin_enable_qt != xno; then
     AC_MSG_WARN("xgettext is required to update qt translations")
   fi
 
-  if test x$use_tests = xyes; then
-    BUILD_TEST_QT="test"
-    if test x$bitcoin_enable_qt_test != xyes; then
-      AC_MSG_ERROR("Qt Test lib not found. Use --disable-tests or --without-gui.")
-    fi
-  fi
   if test x$enable_wallet == xno; then
     AC_MSG_ERROR([Cannot currently build Qt GUI with wallet disabled. Use --without-qt.])
   fi
 fi
 
-if test x$use_tests = xyes; then
-  BUILD_TEST="test"
-fi
-
-if test "x$use_tests$build_bitcoind$use_qt" = "xnonono"; then
-  AC_MSG_ERROR([No targets! Please specify at least one of: --enable-cli --enable-daemon --enable-gui or --enable-tests])
+if test "x$build_bitcoind$use_qt" = "xnonono"; then
+  AC_MSG_ERROR([No targets! Please specify at least one of: --enable-cli --enable-daemon --enable-gui])
 fi
 
 AM_CONDITIONAL([TARGET_DARWIN], [test x$TARGET_OS = xdarwin])
@@ -667,15 +643,10 @@ AC_SUBST(INCLUDES)
 AC_SUBST(BOOST_LIBS)
 AC_SUBST(MOC_DEFS)
 AC_SUBST(QT_INCLUDES)
-AC_SUBST(QT_TEST_LIBS)
 AC_SUBST(QT_LIBS)
 AC_SUBST(QT_DBUS_LIBS)
 AC_SUBST(QT_DBUS_INCLUDES)
-AC_SUBST(QT_TEST_INCLUDES)
-AC_SUBST(TESTDEFS)
 AC_SUBST(LEVELDB_TARGET_FLAGS)
 AC_SUBST(BUILD_QT)
-AC_SUBST(BUILD_TEST)
-AC_SUBST(BUILD_TEST_QT)
 AC_CONFIG_FILES([Makefile src/Makefile])
 AC_OUTPUT

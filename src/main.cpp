@@ -708,9 +708,9 @@ bool CTxMemPool::accept(CValidationState &state, CTransaction &tx, bool fCheckIn
     if ((int64)tx.nLockTime > std::numeric_limits<int>::max())
         return error("CTxMemPool::accept() : not accepting nLockTime beyond 2038 yet");
 
-    // Rather not work on nonstandard transactions (unless -testnet)
+    // Rather not work on nonstandard transactions
     string strNonStd;
-    if (!fTestNet && !tx.IsStandard(strNonStd))
+    if (!tx.IsStandard(strNonStd))
         return error("CTxMemPool::accept() : nonstandard transaction (%s)",
                      strNonStd.c_str());
 
@@ -787,7 +787,7 @@ bool CTxMemPool::accept(CValidationState &state, CTransaction &tx, bool fCheckIn
         }
 
         // Check for non-standard pay-to-script-hash in inputs
-        if (!tx.AreInputsStandard(view) && !fTestNet)
+        if (!tx.AreInputsStandard(view))
             return error("CTxMemPool::accept() : nonstandard transaction input");
 
         // Note: if you modify this code to accept non-standard transactions, then
@@ -3146,7 +3146,7 @@ bool LoadBlockIndex()
     GetMessageStart(pchMessageStart);
 
     printf("%s Network: genesis=0x%s nBitsLimit=0x%08x nBitsInitial=0x%08x nStakeMinAge=%d nCoinbaseMaturity=%d nModifierInterval=%d\n",
-           fTestNet? "Test" : "Peercoin", hashGenesisBlock.ToString().substr(0, 20).c_str(), bnProofOfWorkLimit.GetCompact(), bnInitialHashTarget.GetCompact(), nStakeMinAge, nCoinbaseMaturity, nModifierInterval);
+           "Peercoin", hashGenesisBlock.ToString().substr(0, 20).c_str(), bnProofOfWorkLimit.GetCompact(), bnInitialHashTarget.GetCompact(), nStakeMinAge, nCoinbaseMaturity, nModifierInterval);
 
     //
     // Load block index from databases
@@ -3193,12 +3193,6 @@ bool InitBlockIndex() {
         block.nTime    = 1345084287;
         block.nBits    = CBigNum(~uint256(0) >> 32).GetCompact();
         block.nNonce   = 2179302059u;
-
-        if (fTestNet)
-        {
-            block.nTime    = 1345090000;
-            block.nNonce   = 122894938;
-        }
 
         //// debug print
         uint256 hash = block.GetHash();

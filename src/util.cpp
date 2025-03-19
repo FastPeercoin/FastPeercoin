@@ -83,7 +83,6 @@ bool fDaemon = false;
 bool fServer = false;
 bool fCommandLine = false;
 string strMiscWarning;
-bool fTestNet = false;
 bool fNoListen = false;
 bool fLogTimestamps = false;
 CMedianFilter<int64> vTimeOffsets(200,0);
@@ -1144,8 +1143,6 @@ const boost::filesystem::path &GetDataDir(bool fNetSpecific)
                 path = defaultDataDir;
         }
     }
-    if (fNetSpecific && GetBoolArg("-testnet", false))
-        path /= "testnet";
 
     fs::create_directories(path);
 

@@ -23,7 +23,6 @@ public:
         ProxySocksVersion, // int
         DisplayUnit,       // BitcoinUnits::Unit
         Language,          // QString
-        CoinControlFeatures, // bool
         OptionIDRowCount,
     };
 
@@ -40,18 +39,13 @@ public:
     int getDisplayUnit() { return nDisplayUnit; }
     QString getLanguage() { return language; }
 
-    bool getCoinControlFeatures() { return fCoinControlFeatures; }
-
 private:
     int nDisplayUnit;
-
-    bool fCoinControlFeatures;
 
     QString language;
 
 signals:
     void displayUnitChanged(int unit);
-    void coinControlFeaturesChanged(bool);
 };
 
 #endif // OPTIONSMODEL_H

@@ -16,7 +16,6 @@ class CPubKey;
 class COutput;
 class COutPoint;
 class uint256;
-class CCoinControl;
 
 QT_BEGIN_NAMESPACE
 class QTimer;
@@ -86,7 +85,7 @@ public:
     };
 
     // Send coins to a list of recipients
-    SendCoinsReturn sendCoins(const QList<SendCoinsRecipient> &recipients, const CCoinControl *coinControl=NULL);
+    SendCoinsReturn sendCoins(const QList<SendCoinsRecipient> &recipients);
 
     // Wallet encryption
     bool setWalletEncrypted(bool encrypted, const SecureString &passphrase);

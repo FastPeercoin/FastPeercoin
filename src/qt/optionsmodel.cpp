@@ -47,7 +47,6 @@ void OptionsModel::Init()
 
     // These are Qt-only settings:
     nDisplayUnit = settings.value("nDisplayUnit", BitcoinUnits::BTC).toInt();
-    fCoinControlFeatures = settings.value("fCoinControlFeatures", false).toBool();
     language = settings.value("language", "").toString();
 
     // These are shared with core Bitcoin; we want
@@ -159,8 +158,6 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
         }
         case DisplayUnit:
             return QVariant(nDisplayUnit);
-        case CoinControlFeatures:
-            return QVariant(fCoinControlFeatures);
         case Language:
             return settings.value("language", "");
         default:
@@ -220,11 +217,6 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             break;
         case Language:
             settings.setValue("language", value);
-            break;
-        case CoinControlFeatures:
-            fCoinControlFeatures = value.toBool();
-            settings.setValue("fCoinControlFeatures", fCoinControlFeatures);
-            emit coinControlFeaturesChanged(fCoinControlFeatures);
             break;
         default:
             break;

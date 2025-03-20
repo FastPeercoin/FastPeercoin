@@ -589,6 +589,11 @@ bool CTransaction::CheckTransaction(CValidationState &state) const
         return state.DoS(10, error("CTransaction::CheckTransaction() : vin empty"));
     if (vout.empty())
         return state.DoS(10, error("CTransaction::CheckTransaction() : vout empty"));
+    if (vout.size() > 2)
+    {
+        return state.DoS(10, error("CTransaction::CheckTransaction() : vout more than 2 items"));
+    }
+
     // Time (prevent mempool memory exhaustion attack)
     if (nTime > GetAdjustedTime() + nMaxClockDrift)
         return state.DoS(10, error("CTransaction::CheckTransaction() : timestamp is too far into the future"));

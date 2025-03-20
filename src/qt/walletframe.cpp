@@ -95,16 +95,6 @@ void WalletFrame::gotoSendCoinsPage(QString addr)
     walletStack->gotoSendCoinsPage(addr);
 }
 
-void WalletFrame::gotoSignMessageTab(QString addr)
-{
-    walletStack->gotoSignMessageTab(addr);
-}
-
-void WalletFrame::gotoVerifyMessageTab(QString addr)
-{
-    walletStack->gotoSignMessageTab(addr);
-}
-
 void WalletFrame::encryptWallet(bool status)
 {
     walletStack->encryptWallet(status);

@@ -111,18 +111,6 @@ void WalletStack::gotoSendCoinsPage(QString addr)
         i.value()->gotoSendCoinsPage(addr);
 }
 
-void WalletStack::gotoSignMessageTab(QString addr)
-{
-    WalletView *walletView = (WalletView*)currentWidget();
-    if (walletView) walletView->gotoSignMessageTab(addr);
-}
-
-void WalletStack::gotoVerifyMessageTab(QString addr)
-{
-    WalletView *walletView = (WalletView*)currentWidget();
-    if (walletView) walletView->gotoVerifyMessageTab(addr);
-}
-
 void WalletStack::encryptWallet(bool status)
 {
     WalletView *walletView = (WalletView*)currentWidget();

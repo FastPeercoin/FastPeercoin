@@ -66,7 +66,6 @@ QT_FORMS_UI = \
   qt/forms/qrcodedialog.ui \
   qt/forms/sendcoinsdialog.ui \
   qt/forms/sendcoinsentry.ui \
-  qt/forms/signverifymessagedialog.ui \
   qt/forms/transactiondescdialog.ui
 
 QT_MOC_CPP = \
@@ -91,7 +90,6 @@ QT_MOC_CPP = \
   qt/moc_qvaluecombobox.cpp \
   qt/moc_sendcoinsdialog.cpp \
   qt/moc_sendcoinsentry.cpp \
-  qt/moc_signverifymessagedialog.cpp \
   qt/moc_splashscreen.cpp \
   qt/moc_transactiondesc.cpp \
   qt/moc_transactiondescdialog.cpp \
@@ -133,7 +131,6 @@ PEERCOIN_QT_H = \
   qt/qvaluecombobox.h \
   qt/sendcoinsdialog.h \
   qt/sendcoinsentry.h \
-  qt/signverifymessagedialog.h \
   qt/splashscreen.h \
   qt/transactiondescdialog.h \
   qt/transactiondesc.h \
@@ -213,7 +210,6 @@ PEERCOIN_QT_CPP += \
   qt/paymentserver.cpp \
   qt/sendcoinsdialog.cpp \
   qt/sendcoinsentry.cpp \
-  qt/signverifymessagedialog.cpp \
   qt/transactiondesc.cpp \
   qt/transactiondescdialog.cpp \
   qt/transactionfilterproxy.cpp \

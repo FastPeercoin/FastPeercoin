@@ -73,17 +73,6 @@ BITCOIN_CORE_H = \
   walletdb.h \
   wallet.h
 
-JSON_H = \
-  json/json_spirit.h \
-  json/json_spirit_error_position.h \
-  json/json_spirit_reader.h \
-  json/json_spirit_reader_template.h \
-  json/json_spirit_stream_reader.h \
-  json/json_spirit_utils.h \
-  json/json_spirit_value.h \
-  json/json_spirit_writer.h \
-  json/json_spirit_writer_template.h 
-
 obj/build.h: FORCE
 	@$(MKDIR_P) $(abs_top_builddir)/src/obj
 	@$(top_srcdir)/share/genbuild.sh $(abs_top_builddir)/src/obj/build.h \
@@ -103,7 +92,6 @@ libpeercoin_server_a_SOURCES = \
   net.cpp \
   noui.cpp \
   txdb.cpp \
-  $(JSON_H) \
   $(BITCOIN_CORE_H)
 
 libpeercoin_wallet_a_SOURCES = \

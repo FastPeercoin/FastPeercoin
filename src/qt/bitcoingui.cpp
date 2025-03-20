@@ -63,7 +63,6 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     encryptWalletAction(0),
     decryptForMintingAction(0),
     changePassphraseAction(0),
-    trayIcon(0),
     notificator(0),
     prevBlocks(0)
 {
@@ -90,7 +89,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     // Accept D&D of URIs
     setAcceptDrops(true);
 
-    // Create actions for the toolbar, menu bar and tray/dock icon
+    // Create actions for the toolbar, menu bar
     // Needs walletFrame to be initialized
     createActions();
 
@@ -100,8 +99,8 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     // Create the toolbars
     createToolBars();
 
-    // Create system tray icon and notification
-    createTrayIcon();
+    // Create system notification
+    notificator = new Notificator(QApplication::applicationName());
 
     // Create status bar
     statusBar();
@@ -136,12 +135,6 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
 BitcoinGUI::~BitcoinGUI()
 {
     saveWindowGeometry();
-    if(trayIcon) // Hide tray icon, as deleting will let it linger until quit (on Ubuntu)
-        trayIcon->hide();
-#ifdef Q_OS_MAC
-    delete appMenuBar;
-    MacDockIconHandler::instance()->setMainWindow(NULL);
-#endif
 }
 
 void BitcoinGUI::createActions()
@@ -201,8 +194,6 @@ void BitcoinGUI::createActions()
     optionsAction = new QAction(QIcon(":/icons/options"), tr("&Options..."), this);
     optionsAction->setStatusTip(tr("Modify configuration options for Peercoin"));
     optionsAction->setMenuRole(QAction::PreferencesRole);
-    toggleHideAction = new QAction(QIcon(":/icons/peercoin"), tr("&Show / Hide"), this);
-    toggleHideAction->setStatusTip(tr("Show or hide the main Window"));
 
     encryptWalletAction = new QAction(QIcon(":/icons/lock_closed"), tr("&Encrypt Wallet..."), this);
     encryptWalletAction->setStatusTip(tr("Encrypt the private keys that belong to your wallet"));
@@ -215,7 +206,6 @@ void BitcoinGUI::createActions()
 
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     connect(optionsAction, SIGNAL(triggered()), this, SLOT(optionsClicked()));
-    connect(toggleHideAction, SIGNAL(triggered()), this, SLOT(toggleHidden()));
     connect(encryptWalletAction, SIGNAL(triggered(bool)), walletFrame, SLOT(encryptWallet(bool)));
     connect(decryptForMintingAction, SIGNAL(triggered(bool)), walletFrame, SLOT(decryptForMinting(bool)));
     connect(changePassphraseAction, SIGNAL(triggered()), walletFrame, SLOT(changePassphrase()));
@@ -264,10 +254,6 @@ void BitcoinGUI::setClientModel(ClientModel *clientModel)
     this->clientModel = clientModel;
     if(clientModel)
     {
-        // Create system tray menu (or setup the dock menu) that late to prevent users from calling actions,
-        // while the client has not yet fully loaded
-        createTrayIconMenu();
-
         // Keep up to date with client
         setNumConnections(clientModel->getNumConnections());
         connect(clientModel, SIGNAL(numConnectionsChanged(int)), this, SLOT(setNumConnections(int)));
@@ -295,60 +281,6 @@ bool BitcoinGUI::setCurrentWallet(const QString& name)
 void BitcoinGUI::removeAllWallets()
 {
     walletFrame->removeAllWallets();
-}
-
-void BitcoinGUI::createTrayIcon()
-{
-#ifndef Q_OS_MAC
-    trayIcon = new QSystemTrayIcon(this);
-
-    trayIcon->setToolTip(tr("Peercoin client"));
-    trayIcon->setIcon(QIcon(":/icons/toolbar"));
-    trayIcon->show();
-#endif
-
-    notificator = new Notificator(QApplication::applicationName(), trayIcon);
-}
-
-void BitcoinGUI::createTrayIconMenu()
-{
-    QMenu *trayIconMenu;
-#ifndef Q_OS_MAC
-    // return if trayIcon is unset (only on non-Mac OSes)
-    if (!trayIcon)
-        return;
-
-    trayIconMenu = new QMenu(this);
-    trayIcon->setContextMenu(trayIconMenu);
-
-    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
-            this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
-#else
-    // Note: On Mac, the dock icon is used to provide the tray's functionality.
-    MacDockIconHandler *dockIconHandler = MacDockIconHandler::instance();
-    dockIconHandler->setMainWindow((QMainWindow *)this);
-    trayIconMenu = dockIconHandler->dockMenu();
-#endif
-
-    // Configuration of the tray icon (or dock icon) icon menu
-    trayIconMenu->addAction(toggleHideAction);
-    trayIconMenu->addSeparator();
-    trayIconMenu->addAction(sendCoinsAction);
-    trayIconMenu->addAction(receiveCoinsAction);
-    trayIconMenu->addSeparator();
-    trayIconMenu->addSeparator();
-    trayIconMenu->addAction(optionsAction);
-    trayIconMenu->addSeparator();
-    trayIconMenu->addAction(quitAction);
-}
-
-void BitcoinGUI::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
-{
-    if(reason == QSystemTrayIcon::Trigger)
-    {
-        // Click on system tray icon triggers show/hide of the main window
-        toggleHideAction->trigger();
-    }
 }
 
 void BitcoinGUI::saveWindowGeometry()

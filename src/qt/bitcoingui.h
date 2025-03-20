@@ -3,7 +3,6 @@
 
 #include <QDesktopServices>
 #include <QMainWindow>
-#include <QSystemTrayIcon>
 #include <QMap>
 
 class TransactionTableModel;
@@ -98,7 +97,6 @@ private:
     QAction *changePassphraseAction;
     QAction *aboutQtAction;
 
-    QSystemTrayIcon *trayIcon;
     Notificator *notificator;
     TransactionView *transactionView;
 
@@ -112,10 +110,6 @@ private:
     void createMenuBar();
     /** Create the toolbars */
     void createToolBars();
-    /** Create system tray icon and notification */
-    void createTrayIcon();
-    /** Create system tray menu (or setup the dock menu) */
-    void createTrayIconMenu();
     /** Save window size and position */
     void saveWindowGeometry();
     /** Restore window size and position */
@@ -168,11 +162,6 @@ private slots:
 
     /** Show configuration dialog */
     void optionsClicked();
-
-#ifndef Q_OS_MAC
-    /** Handle tray icon clicked */
-    void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
-#endif
 
     /** Show window if hidden, unminimize when minimized, rise when obscured or show if hidden and fToggleHidden is true */
     void showNormalIfMinimized(bool fToggleHidden = false);

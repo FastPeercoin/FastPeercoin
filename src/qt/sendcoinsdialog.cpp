@@ -25,7 +25,6 @@ SendCoinsDialog::SendCoinsDialog(QWidget *parent) :
 
     addEntry();
 
-    connect(ui->addButton, SIGNAL(clicked()), this, SLOT(addEntry()));
     connect(ui->clearButton, SIGNAL(clicked()), this, SLOT(clear()));
 
     fNewRecipientAllowed = true;
@@ -241,8 +240,6 @@ QWidget *SendCoinsDialog::setupTabChain(QWidget *prev)
             prev = entry->setupTabChain(prev);
         }
     }
-    QWidget::setTabOrder(prev, ui->addButton);
-    QWidget::setTabOrder(ui->addButton, ui->sendButton);
     return ui->sendButton;
 }
 

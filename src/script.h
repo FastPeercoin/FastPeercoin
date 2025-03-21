@@ -114,18 +114,6 @@ enum opcodetype
     OP_15 = 0x5f,
     OP_16 = 0x60,
 
-    // control
-    OP_NOP = 0x61,
-    OP_VER = 0x62,
-    OP_IF = 0x63,
-    OP_NOTIF = 0x64,
-    OP_VERIF = 0x65,
-    OP_VERNOTIF = 0x66,
-    OP_ELSE = 0x67,
-    OP_ENDIF = 0x68,
-    OP_VERIFY = 0x69,
-    OP_RETURN = 0x6a,
-
     // stack ops
     OP_TOALTSTACK = 0x6b,
     OP_FROMALTSTACK = 0x6c,
@@ -205,19 +193,6 @@ enum opcodetype
     OP_CODESEPARATOR = 0xab,
     OP_CHECKSIG = 0xac,
     OP_CHECKSIGVERIFY = 0xad,
-
-    // expansion
-    OP_NOP1 = 0xb0,
-    OP_NOP3 = 0xb2,
-    OP_NOP4 = 0xb3,
-    OP_NOP5 = 0xb4,
-    OP_NOP6 = 0xb5,
-    OP_NOP7 = 0xb6,
-    OP_NOP8 = 0xb7,
-    OP_NOP9 = 0xb8,
-    OP_NOP10 = 0xb9,
-
-
 
     // template matching params
     OP_SMALLDATA = 0xf9,

@@ -115,35 +115,11 @@ enum opcodetype
     OP_16 = 0x60,
 
     // stack ops
-    OP_TOALTSTACK = 0x6b,
-    OP_FROMALTSTACK = 0x6c,
-    OP_2DROP = 0x6d,
-    OP_2DUP = 0x6e,
-    OP_3DUP = 0x6f,
-    OP_2OVER = 0x70,
-    OP_2ROT = 0x71,
-    OP_2SWAP = 0x72,
-    OP_IFDUP = 0x73,
-    OP_DEPTH = 0x74,
-    OP_DROP = 0x75,
     OP_DUP = 0x76,
-    OP_NIP = 0x77,
-    OP_OVER = 0x78,
-    OP_PICK = 0x79,
-    OP_ROLL = 0x7a,
-    OP_ROT = 0x7b,
-    OP_SWAP = 0x7c,
-    OP_TUCK = 0x7d,
 
     // bit logic
-    OP_INVERT = 0x83,
-    OP_AND = 0x84,
-    OP_OR = 0x85,
-    OP_XOR = 0x86,
     OP_EQUAL = 0x87,
     OP_EQUALVERIFY = 0x88,
-    OP_RESERVED1 = 0x89,
-    OP_RESERVED2 = 0x8a,
 
     // crypto
     OP_HASH160 = 0xa9,

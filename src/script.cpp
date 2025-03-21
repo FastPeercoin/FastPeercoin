@@ -150,35 +150,6 @@ const char* GetOpName(opcodetype opcode)
     case OP_RESERVED1              : return "OP_RESERVED1";
     case OP_RESERVED2              : return "OP_RESERVED2";
 
-    // numeric
-    case OP_1ADD                   : return "OP_1ADD";
-    case OP_1SUB                   : return "OP_1SUB";
-    case OP_2MUL                   : return "OP_2MUL";
-    case OP_2DIV                   : return "OP_2DIV";
-    case OP_NEGATE                 : return "OP_NEGATE";
-    case OP_ABS                    : return "OP_ABS";
-    case OP_NOT                    : return "OP_NOT";
-    case OP_0NOTEQUAL              : return "OP_0NOTEQUAL";
-    case OP_ADD                    : return "OP_ADD";
-    case OP_SUB                    : return "OP_SUB";
-    case OP_MUL                    : return "OP_MUL";
-    case OP_DIV                    : return "OP_DIV";
-    case OP_MOD                    : return "OP_MOD";
-    case OP_LSHIFT                 : return "OP_LSHIFT";
-    case OP_RSHIFT                 : return "OP_RSHIFT";
-    case OP_BOOLAND                : return "OP_BOOLAND";
-    case OP_BOOLOR                 : return "OP_BOOLOR";
-    case OP_NUMEQUAL               : return "OP_NUMEQUAL";
-    case OP_NUMEQUALVERIFY         : return "OP_NUMEQUALVERIFY";
-    case OP_NUMNOTEQUAL            : return "OP_NUMNOTEQUAL";
-    case OP_LESSTHAN               : return "OP_LESSTHAN";
-    case OP_GREATERTHAN            : return "OP_GREATERTHAN";
-    case OP_LESSTHANOREQUAL        : return "OP_LESSTHANOREQUAL";
-    case OP_GREATERTHANOREQUAL     : return "OP_GREATERTHANOREQUAL";
-    case OP_MIN                    : return "OP_MIN";
-    case OP_MAX                    : return "OP_MAX";
-    case OP_WITHIN                 : return "OP_WITHIN";
-
     // crypto
     case OP_RIPEMD160              : return "OP_RIPEMD160";
     case OP_SHA1                   : return "OP_SHA1";
@@ -336,14 +307,7 @@ bool EvalScript(vector<vector<unsigned char> >& stack, const CScript& script, co
                 opcode == OP_INVERT ||
                 opcode == OP_AND ||
                 opcode == OP_OR ||
-                opcode == OP_XOR ||
-                opcode == OP_2MUL ||
-                opcode == OP_2DIV ||
-                opcode == OP_MUL ||
-                opcode == OP_DIV ||
-                opcode == OP_MOD ||
-                opcode == OP_LSHIFT ||
-                opcode == OP_RSHIFT)
+                opcode == OP_XOR)
                 return false; // Disabled opcodes.
 
             if (fExec && 0 <= opcode && opcode <= OP_PUSHDATA4)
@@ -618,110 +582,6 @@ bool EvalScript(vector<vector<unsigned char> >& stack, const CScript& script, co
                     }
                 }
                 break;
-
-
-                //
-                // Numeric
-                //
-                case OP_1ADD:
-                case OP_1SUB:
-                case OP_NEGATE:
-                case OP_ABS:
-                case OP_NOT:
-                case OP_0NOTEQUAL:
-                {
-                    // (in -- out)
-                    if (stack.size() < 1)
-                        return false;
-                    CBigNum bn = CastToBigNum(stacktop(-1));
-                    switch (opcode)
-                    {
-                    case OP_1ADD:       bn += bnOne; break;
-                    case OP_1SUB:       bn -= bnOne; break;
-                    case OP_NEGATE:     bn = -bn; break;
-                    case OP_ABS:        if (bn < bnZero) bn = -bn; break;
-                    case OP_NOT:        bn = (bn == bnZero); break;
-                    case OP_0NOTEQUAL:  bn = (bn != bnZero); break;
-                    default:            assert(!"invalid opcode"); break;
-                    }
-                    popstack(stack);
-                    stack.push_back(bn.getvch());
-                }
-                break;
-
-                case OP_ADD:
-                case OP_SUB:
-                case OP_BOOLAND:
-                case OP_BOOLOR:
-                case OP_NUMEQUAL:
-                case OP_NUMEQUALVERIFY:
-                case OP_NUMNOTEQUAL:
-                case OP_LESSTHAN:
-                case OP_GREATERTHAN:
-                case OP_LESSTHANOREQUAL:
-                case OP_GREATERTHANOREQUAL:
-                case OP_MIN:
-                case OP_MAX:
-                {
-                    // (x1 x2 -- out)
-                    if (stack.size() < 2)
-                        return false;
-                    CBigNum bn1 = CastToBigNum(stacktop(-2));
-                    CBigNum bn2 = CastToBigNum(stacktop(-1));
-                    CBigNum bn;
-                    switch (opcode)
-                    {
-                    case OP_ADD:
-                        bn = bn1 + bn2;
-                        break;
-
-                    case OP_SUB:
-                        bn = bn1 - bn2;
-                        break;
-
-                    case OP_BOOLAND:             bn = (bn1 != bnZero && bn2 != bnZero); break;
-                    case OP_BOOLOR:              bn = (bn1 != bnZero || bn2 != bnZero); break;
-                    case OP_NUMEQUAL:            bn = (bn1 == bn2); break;
-                    case OP_NUMEQUALVERIFY:      bn = (bn1 == bn2); break;
-                    case OP_NUMNOTEQUAL:         bn = (bn1 != bn2); break;
-                    case OP_LESSTHAN:            bn = (bn1 < bn2); break;
-                    case OP_GREATERTHAN:         bn = (bn1 > bn2); break;
-                    case OP_LESSTHANOREQUAL:     bn = (bn1 <= bn2); break;
-                    case OP_GREATERTHANOREQUAL:  bn = (bn1 >= bn2); break;
-                    case OP_MIN:                 bn = (bn1 < bn2 ? bn1 : bn2); break;
-                    case OP_MAX:                 bn = (bn1 > bn2 ? bn1 : bn2); break;
-                    default:                     assert(!"invalid opcode"); break;
-                    }
-                    popstack(stack);
-                    popstack(stack);
-                    stack.push_back(bn.getvch());
-
-                    if (opcode == OP_NUMEQUALVERIFY)
-                    {
-                        if (CastToBool(stacktop(-1)))
-                            popstack(stack);
-                        else
-                            return false;
-                    }
-                }
-                break;
-
-                case OP_WITHIN:
-                {
-                    // (x min max -- out)
-                    if (stack.size() < 3)
-                        return false;
-                    CBigNum bn1 = CastToBigNum(stacktop(-3));
-                    CBigNum bn2 = CastToBigNum(stacktop(-2));
-                    CBigNum bn3 = CastToBigNum(stacktop(-1));
-                    bool fValue = (bn2 <= bn1 && bn1 < bn3);
-                    popstack(stack);
-                    popstack(stack);
-                    popstack(stack);
-                    stack.push_back(fValue ? vchTrue : vchFalse);
-                }
-                break;
-
 
                 //
                 // Crypto

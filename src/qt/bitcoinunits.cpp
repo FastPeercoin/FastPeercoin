@@ -2,97 +2,27 @@
 
 #include <QStringList>
 
-BitcoinUnits::BitcoinUnits(QObject *parent):
-        QAbstractListModel(parent),
-        unitlist(availableUnits())
+QString BitcoinUnits::name()
 {
+    return QString("FPC");
 }
 
-QList<BitcoinUnits::Unit> BitcoinUnits::availableUnits()
+qint64 BitcoinUnits::factor()
 {
-    QList<BitcoinUnits::Unit> unitlist;
-    unitlist.append(BTC);
-    unitlist.append(mBTC);
-    unitlist.append(uBTC);
-    return unitlist;
+    return 1000000;
 }
 
-bool BitcoinUnits::valid(int unit)
+int BitcoinUnits::decimals()
 {
-    switch(unit)
-    {
-    case BTC:
-    case mBTC:
-    case uBTC:
-        return true;
-    default:
-        return false;
-    }
+    return 6;
 }
 
-QString BitcoinUnits::name(int unit)
-{
-    switch(unit)
-    {
-    case BTC: return QString("PPC");
-    case mBTC: return QString("mPPC");
-    case uBTC: return QString::fromUtf8("μPPC");
-    default: return QString("???");
-    }
-}
-
-QString BitcoinUnits::description(int unit)
-{
-    switch(unit)
-    {
-    case BTC: return QString("Peercoins");
-    case mBTC: return QString("Milli-Peercoins (1 / 1,000)");
-    case uBTC: return QString("Micro-Peercoins (1 / 1,000,000)");
-    default: return QString("???");
-    }
-}
-
-qint64 BitcoinUnits::factor(int unit)
-{
-    switch(unit)
-    {
-    case BTC:  return 1000000;
-    case mBTC: return 1000;
-    case uBTC: return 1;
-    default:   return 1000000;
-    }
-}
-
-int BitcoinUnits::amountDigits(int unit)
-{
-    switch(unit)
-    {
-    case BTC: return 10; // 21,000,000 (# digits, without commas)
-    case mBTC: return 13; // 21,000,000,000
-    case uBTC: return 16; // 21,000,000,000,000
-    default: return 0;
-    }
-}
-
-int BitcoinUnits::decimals(int unit)
-{
-    switch(unit)
-    {
-    case BTC: return 6;
-    case mBTC: return 3;
-    case uBTC: return 0;
-    default: return 0;
-    }
-}
-
-QString BitcoinUnits::format(int unit, qint64 n, bool fPlus, bool trimzeros)
+QString BitcoinUnits::format(qint64 n, bool fPlus, bool trimzeros)
 {
     // Note: not using straight sprintf here because we do NOT want
     // localized number formatting.
-    if(!valid(unit))
-        return QString(); // Refuse to format invalid unit
-    qint64 coin = factor(unit);
-    int num_decimals = decimals(unit);
+    qint64 coin = factor();
+    int num_decimals = decimals();
     qint64 n_abs = (n > 0 ? n : -n);
     qint64 quotient = n_abs / coin;
     qint64 remainder = n_abs % coin;
@@ -115,16 +45,16 @@ QString BitcoinUnits::format(int unit, qint64 n, bool fPlus, bool trimzeros)
     return quotient_str + QString(".") + remainder_str;
 }
 
-QString BitcoinUnits::formatWithUnit(int unit, qint64 amount, bool plussign, bool trimzeros)
+QString BitcoinUnits::formatWithUnit(qint64 amount, bool plussign, bool trimzeros)
 {
-    return format(unit, amount, plussign, trimzeros) + QString(" ") + name(unit);
+    return format(amount, plussign, trimzeros) + QString(" ") + name();
 }
 
-bool BitcoinUnits::parse(int unit, const QString &value, qint64 *val_out)
+bool BitcoinUnits::parse(const QString &value, qint64 *val_out)
 {
-    if(!valid(unit) || value.isEmpty())
+    if(value.isEmpty())
         return false; // Refuse to parse invalid unit or empty string
-    int num_decimals = decimals(unit);
+    int num_decimals = decimals();
     QStringList parts = value.split(".");
 
     if(parts.size() > 2)
@@ -155,30 +85,4 @@ bool BitcoinUnits::parse(int unit, const QString &value, qint64 *val_out)
         *val_out = retvalue;
     }
     return ok;
-}
-
-int BitcoinUnits::rowCount(const QModelIndex &parent) const
-{
-    Q_UNUSED(parent);
-    return unitlist.size();
-}
-
-QVariant BitcoinUnits::data(const QModelIndex &index, int role) const
-{
-    int row = index.row();
-    if(row >= 0 && row < unitlist.size())
-    {
-        Unit unit = unitlist.at(row);
-        switch(role)
-        {
-        case Qt::EditRole:
-        case Qt::DisplayRole:
-            return QVariant(name(unit));
-        case Qt::ToolTipRole:
-            return QVariant(description(unit));
-        case UnitRole:
-            return QVariant(static_cast<int>(unit));
-        }
-    }
-    return QVariant();
 }

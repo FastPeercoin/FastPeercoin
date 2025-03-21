@@ -42,12 +42,6 @@ QRCodeDialog::~QRCodeDialog()
 void QRCodeDialog::setModel(OptionsModel *model)
 {
     this->model = model;
-
-    if (model)
-        connect(model, SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
-
-    // update the display unit, to not use the default ("BTC")
-    updateDisplayUnit();
 }
 
 void QRCodeDialog::genCode()
@@ -95,7 +89,7 @@ QString QRCodeDialog::getURI()
         if (ui->lnReqAmount->validate())
         {
             // even if we allow a non BTC unit input in lnReqAmount, we generate the URI with BTC as unit (as defined in BIP21)
-            ret += QString("?amount=%1").arg(BitcoinUnits::format(BitcoinUnits::BTC, ui->lnReqAmount->value()));
+            ret += QString("?amount=%1").arg(BitcoinUnits::format(ui->lnReqAmount->value()));
             paramCount++;
         }
         else
@@ -161,13 +155,4 @@ void QRCodeDialog::on_chkReqPayment_toggled(bool fChecked)
         ui->lnReqAmount->setValid(true);
 
     genCode();
-}
-
-void QRCodeDialog::updateDisplayUnit()
-{
-    if (model)
-    {
-        // Update lnReqAmount with the current unit
-        ui->lnReqAmount->setDisplayUnit(model->getDisplayUnit());
-    }
 }

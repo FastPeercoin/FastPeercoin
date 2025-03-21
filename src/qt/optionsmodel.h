@@ -21,31 +21,21 @@ public:
         ProxyIP,           // QString
         ProxyPort,         // int
         ProxySocksVersion, // int
-        DisplayUnit,       // BitcoinUnits::Unit
         Language,          // QString
         OptionIDRowCount,
     };
 
     void Init();
 
-    /* Migrate settings from wallet.dat after app initialization */
-    bool Upgrade(); /* returns true if settings upgraded */
-
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
     bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
 
     /* Explicit getters */
-    int getDisplayUnit() { return nDisplayUnit; }
     QString getLanguage() { return language; }
 
 private:
-    int nDisplayUnit;
-
     QString language;
-
-signals:
-    void displayUnitChanged(int unit);
 };
 
 #endif // OPTIONSMODEL_H

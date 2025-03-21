@@ -27,9 +27,6 @@ public:
     /** Perform input validation, mark field as invalid if entered value is not valid. */
     bool validate();
 
-    /** Change unit used to display amount. */
-    void setDisplayUnit(int unit);
-
     /** Make field empty and ready for new input. */
     void clear();
 
@@ -47,15 +44,9 @@ protected:
 
 private:
     QDoubleSpinBox *amount;
-    QValueComboBox *unit;
-    int currentUnit;
 
     void setText(const QString &text);
     QString text() const;
-
-private slots:
-    void unitChanged(int idx);
-
 };
 
 #endif // BITCOINAMOUNTFIELD_H

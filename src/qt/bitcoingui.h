@@ -146,7 +146,7 @@ public slots:
     void handleURI(QString strURI);
 
     /** Show incoming transaction notification for new transactions. */
-    void incomingTransaction(const QString& date, int unit, qint64 amount, const QString& type, const QString& address);
+    void incomingTransaction(const QString& date, qint64 amount, const QString& type, const QString& address);
 
 private slots:
     /** Switch to overview (home) page */

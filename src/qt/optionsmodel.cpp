@@ -4,7 +4,6 @@
 
 #include "optionsmodel.h"
 
-#include "bitcoinunits.h"
 #include "init.h"
 #include "walletdb.h"
 #include "guiutil.h"
@@ -46,7 +45,6 @@ void OptionsModel::Init()
     QSettings settings;
 
     // These are Qt-only settings:
-    nDisplayUnit = settings.value("nDisplayUnit", BitcoinUnits::BTC).toInt();
     language = settings.value("language", "").toString();
 
     // These are shared with core Bitcoin; we want
@@ -58,66 +56,6 @@ void OptionsModel::Init()
     if (!language.isEmpty())
         SoftSetArg("-lang", language.toStdString());
 }
-
-bool OptionsModel::Upgrade()
-{
-    QSettings settings;
-
-    if (settings.contains("bImportFinished"))
-        return false; // Already upgraded
-
-    settings.setValue("bImportFinished", true);
-
-    // Move settings from old wallet.dat (if any):
-    CWalletDB walletdb("wallet.dat");
-
-    QList<QString> intOptions;
-    intOptions << "nDisplayUnit";
-    foreach(QString key, intOptions)
-    {
-        int value = 0;
-        if (walletdb.ReadSetting(key.toStdString(), value))
-        {
-            settings.setValue(key, value);
-            walletdb.EraseSetting(key.toStdString());
-        }
-    }
-    QList<QString> boolOptions;
-    boolOptions << "fUseProxy";
-    foreach(QString key, boolOptions)
-    {
-        bool value = false;
-        if (walletdb.ReadSetting(key.toStdString(), value))
-        {
-            settings.setValue(key, value);
-            walletdb.EraseSetting(key.toStdString());
-        }
-    }
-    try
-    {
-        CAddress addrProxyAddress;
-        if (walletdb.ReadSetting("addrProxy", addrProxyAddress))
-        {
-            settings.setValue("addrProxy", addrProxyAddress.ToStringIPPort().c_str());
-            walletdb.EraseSetting("addrProxy");
-        }
-    }
-    catch (std::ios_base::failure &e)
-    {
-        // 0.6.0rc1 saved this as a CService, which causes failure when parsing as a CAddress
-        CService addrProxy;
-        if (walletdb.ReadSetting("addrProxy", addrProxy))
-        {
-            settings.setValue("addrProxy", addrProxy.ToStringIPPort().c_str());
-            walletdb.EraseSetting("addrProxy");
-        }
-    }
-    ApplyProxySettings();
-    Init();
-
-    return true;
-}
-
 
 int OptionsModel::rowCount(const QModelIndex & parent) const
 {
@@ -156,8 +94,6 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             else
                 return QVariant(5);
         }
-        case DisplayUnit:
-            return QVariant(nDisplayUnit);
         case Language:
             return settings.value("language", "");
         default:
@@ -210,11 +146,6 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             successful = ApplyProxySettings();
         }
         break;
-        case DisplayUnit:
-            nDisplayUnit = value.toInt();
-            settings.setValue("nDisplayUnit", nDisplayUnit);
-            emit displayUnitChanged(nDisplayUnit);
-            break;
         case Language:
             settings.setValue("language", value);
             break;

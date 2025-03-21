@@ -49,7 +49,6 @@ private:
 private slots:
     void on_sendButton_clicked();
     void removeEntry(SendCoinsEntry* entry);
-    void updateDisplayUnit();
 };
 
 #endif // SENDCOINSDIALOG_H

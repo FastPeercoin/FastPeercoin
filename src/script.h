@@ -146,14 +146,8 @@ enum opcodetype
     OP_RESERVED2 = 0x8a,
 
     // crypto
-    OP_RIPEMD160 = 0xa6,
-    OP_SHA1 = 0xa7,
-    OP_SHA256 = 0xa8,
     OP_HASH160 = 0xa9,
-    OP_HASH256 = 0xaa,
-    OP_CODESEPARATOR = 0xab,
     OP_CHECKSIG = 0xac,
-    OP_CHECKSIGVERIFY = 0xad,
 
     // template matching params
     OP_PUBKEYHASH = 0xfd,

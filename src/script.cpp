@@ -144,14 +144,8 @@ const char* GetOpName(opcodetype opcode)
     case OP_RESERVED2              : return "OP_RESERVED2";
 
     // crypto
-    case OP_RIPEMD160              : return "OP_RIPEMD160";
-    case OP_SHA1                   : return "OP_SHA1";
-    case OP_SHA256                 : return "OP_SHA256";
     case OP_HASH160                : return "OP_HASH160";
-    case OP_HASH256                : return "OP_HASH256";
-    case OP_CODESEPARATOR          : return "OP_CODESEPARATOR";
     case OP_CHECKSIG               : return "OP_CHECKSIG";
-    case OP_CHECKSIGVERIFY         : return "OP_CHECKSIGVERIFY";
 
     // template matching params
     case OP_PUBKEYHASH             : return "OP_PUBKEYHASH";
@@ -562,47 +556,21 @@ bool EvalScript(vector<vector<unsigned char> >& stack, const CScript& script, co
                 //
                 // Crypto
                 //
-                case OP_RIPEMD160:
-                case OP_SHA1:
-                case OP_SHA256:
                 case OP_HASH160:
-                case OP_HASH256:
                 {
                     // (in -- hash)
                     if (stack.size() < 1)
                         return false;
                     valtype& vch = stacktop(-1);
-                    valtype vchHash((opcode == OP_RIPEMD160 || opcode == OP_SHA1 || opcode == OP_HASH160) ? 20 : 32);
-                    if (opcode == OP_RIPEMD160)
-                        RIPEMD160(&vch[0], vch.size(), &vchHash[0]);
-                    else if (opcode == OP_SHA1)
-                        SHA1(&vch[0], vch.size(), &vchHash[0]);
-                    else if (opcode == OP_SHA256)
-                        SHA256(&vch[0], vch.size(), &vchHash[0]);
-                    else if (opcode == OP_HASH160)
-                    {
-                        uint160 hash160 = Hash160(vch);
-                        memcpy(&vchHash[0], &hash160, sizeof(hash160));
-                    }
-                    else if (opcode == OP_HASH256)
-                    {
-                        uint256 hash = Hash(vch.begin(), vch.end());
-                        memcpy(&vchHash[0], &hash, sizeof(hash));
-                    }
+                    valtype vchHash(20);
+                    uint160 hash160 = Hash160(vch);
+                    memcpy(&vchHash[0], &hash160, sizeof(hash160));
                     popstack(stack);
                     stack.push_back(vchHash);
                 }
                 break;
 
-                case OP_CODESEPARATOR:
-                {
-                    // Hash starts after the code separator
-                    pbegincodehash = pc;
-                }
-                break;
-
                 case OP_CHECKSIG:
-                case OP_CHECKSIGVERIFY:
                 {
                     // (sig pubkey -- bool)
                     if (stack.size() < 2)
@@ -628,13 +596,6 @@ bool EvalScript(vector<vector<unsigned char> >& stack, const CScript& script, co
                     popstack(stack);
                     popstack(stack);
                     stack.push_back(fSuccess ? vchTrue : vchFalse);
-                    if (opcode == OP_CHECKSIGVERIFY)
-                    {
-                        if (fSuccess)
-                            popstack(stack);
-                        else
-                            return false;
-                    }
                 }
                 break;
 
@@ -675,10 +636,6 @@ uint256 SignatureHash(CScript scriptCode, const CTransaction& txTo, unsigned int
         return 1;
     }
     CTransaction txTmp(txTo);
-
-    // In case concatenating two scripts ends up with two codeseparators,
-    // or an extra one at the end, this prevents all those possible incompatibilities.
-    scriptCode.FindAndDelete(CScript(OP_CODESEPARATOR));
 
     // Blank out other inputs' signatures
     for (unsigned int i = 0; i < txTmp.vin.size(); i++)
@@ -1255,7 +1212,7 @@ unsigned int CScript::GetSigOpCount(bool fAccurate) const
         opcodetype opcode;
         if (!GetOp(pc, opcode))
             break;
-        if (opcode == OP_CHECKSIG || opcode == OP_CHECKSIGVERIFY)
+        if (opcode == OP_CHECKSIG)
             n++;
     }
     return n;

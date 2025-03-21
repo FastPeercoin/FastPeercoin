@@ -239,7 +239,6 @@ SOURCES += src/qt/bitcoin.cpp \
     src/qt/notificator.cpp \
     src/kernel.cpp \
     src/qt/paymentserver.cpp \
-    src/noui.cpp \
     src/leveldbwrapper.cpp \
     src/txdb.cpp \
     src/qt/splashscreen.cpp \

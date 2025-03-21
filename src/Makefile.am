@@ -90,7 +90,6 @@ libpeercoin_server_a_SOURCES = \
   leveldbwrapper.cpp \
   main.cpp \
   net.cpp \
-  noui.cpp \
   txdb.cpp \
   $(BITCOIN_CORE_H)
 

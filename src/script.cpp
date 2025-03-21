@@ -133,13 +133,6 @@ const char* GetOpName(opcodetype opcode)
     case OP_SWAP                   : return "OP_SWAP";
     case OP_TUCK                   : return "OP_TUCK";
 
-    // splice ops
-    case OP_CAT                    : return "OP_CAT";
-    case OP_SUBSTR                 : return "OP_SUBSTR";
-    case OP_LEFT                   : return "OP_LEFT";
-    case OP_RIGHT                  : return "OP_RIGHT";
-    case OP_SIZE                   : return "OP_SIZE";
-
     // bit logic
     case OP_INVERT                 : return "OP_INVERT";
     case OP_AND                    : return "OP_AND";
@@ -300,11 +293,7 @@ bool EvalScript(vector<vector<unsigned char> >& stack, const CScript& script, co
             if (opcode > OP_16 && ++nOpCount > 201)
                 return false;
 
-            if (opcode == OP_CAT ||
-                opcode == OP_SUBSTR ||
-                opcode == OP_LEFT ||
-                opcode == OP_RIGHT ||
-                opcode == OP_INVERT ||
+            if (opcode == OP_INVERT ||
                 opcode == OP_AND ||
                 opcode == OP_OR ||
                 opcode == OP_XOR)
@@ -539,18 +528,6 @@ bool EvalScript(vector<vector<unsigned char> >& stack, const CScript& script, co
                     stack.insert(stack.end()-2, vch);
                 }
                 break;
-
-
-                case OP_SIZE:
-                {
-                    // (in -- in size)
-                    if (stack.size() < 1)
-                        return false;
-                    CBigNum bn(stacktop(-1).size());
-                    stack.push_back(bn.getvch());
-                }
-                break;
-
 
                 //
                 // Bitwise logic

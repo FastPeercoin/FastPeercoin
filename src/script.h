@@ -135,13 +135,6 @@ enum opcodetype
     OP_SWAP = 0x7c,
     OP_TUCK = 0x7d,
 
-    // splice ops
-    OP_CAT = 0x7e,
-    OP_SUBSTR = 0x7f,
-    OP_LEFT = 0x80,
-    OP_RIGHT = 0x81,
-    OP_SIZE = 0x82,
-
     // bit logic
     OP_INVERT = 0x83,
     OP_AND = 0x84,

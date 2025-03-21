@@ -42,10 +42,8 @@
         <file alias="verify">res/icons/verify.png</file>
     </qresource>
     <qresource prefix="/images">
-        <file alias="about">res/images/about.png</file>
         <file alias="splash">res/images/splash.png</file>
         <file alias="logo">res/images/logo.png</file>
-        <file alias="logomask">res/images/logomask.png</file>
         <file alias="transparent">res/images/transparent-background.png</file>
     </qresource>
     <qresource prefix="/movies">

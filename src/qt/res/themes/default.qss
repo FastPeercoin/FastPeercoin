@@ -255,20 +255,6 @@ QFrame QLabel#titleTx {
     font-size: 20px;
 }
 
-/* Logo Mask */
-QStackedWidget#walletstack {
-    background-image: url(:/images/logomask);
-    background-repeat: no-repeat;
-    background-position: bottom left;
-}
-
-/* Send Page */
-QDialog {
-    background-image: url(:/images/logomask);
-    background-repeat: no-repeat;
-    background-position: bottom left;
-}
-
 QScrollArea {
     background-image: url(:/images/transparent);
 }

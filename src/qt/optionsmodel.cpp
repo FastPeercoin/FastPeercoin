@@ -44,17 +44,12 @@ void OptionsModel::Init()
 {
     QSettings settings;
 
-    // These are Qt-only settings:
-    language = settings.value("language", "").toString();
-
     // These are shared with core Bitcoin; we want
     // command-line options to override the GUI settings:
     if (settings.contains("addrProxy") && settings.value("fUseProxy").toBool())
         SoftSetArg("-proxy", settings.value("addrProxy").toString().toStdString());
     if (settings.contains("nSocksVersion") && settings.value("fUseProxy").toBool())
         SoftSetArg("-socks", settings.value("nSocksVersion").toString().toStdString());
-    if (!language.isEmpty())
-        SoftSetArg("-lang", language.toStdString());
 }
 
 int OptionsModel::rowCount(const QModelIndex & parent) const
@@ -94,8 +89,6 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             else
                 return QVariant(5);
         }
-        case Language:
-            return settings.value("language", "");
         default:
             return QVariant();
         }
@@ -146,9 +139,6 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             successful = ApplyProxySettings();
         }
         break;
-        case Language:
-            settings.setValue("language", value);
-            break;
         default:
             break;
         }

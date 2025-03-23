@@ -21,7 +21,6 @@ public:
         ProxyIP,           // QString
         ProxyPort,         // int
         ProxySocksVersion, // int
-        Language,          // QString
         OptionIDRowCount,
     };
 
@@ -30,12 +29,6 @@ public:
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
     bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
-
-    /* Explicit getters */
-    QString getLanguage() { return language; }
-
-private:
-    QString language;
 };
 
 #endif // OPTIONSMODEL_H

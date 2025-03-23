@@ -20,7 +20,6 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
     model(0),
     mapper(0),
     fRestartWarningDisplayed_Proxy(false),
-    fRestartWarningDisplayed_Lang(false),
     fProxyIpValid(true)
 {
     ui->setupUi(this);
@@ -41,41 +40,6 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
     connect(ui->connectSocks, SIGNAL(clicked(bool)), this, SLOT(showRestartWarning_Proxy()));
 
     ui->proxyIp->installEventFilter(this);
-
-    /* Window elements init */
-#ifdef Q_OS_MAC
-    ui->tabWindow->setVisible(false);
-#endif
-
-    /* Display elements init */
-    QDir translations(":translations");
-    ui->lang->addItem(QString("(") + tr("default") + QString(")"), QVariant(""));
-    foreach(const QString &langStr, translations.entryList())
-    {
-        QLocale locale(langStr);
-
-        /** check if the locale name consists of 2 parts (language_country) */
-        if(langStr.contains("_"))
-        {
-#if QT_VERSION >= 0x040800
-            /** display language strings as "native language - native country (locale name)", e.g. "Deutsch - Deutschland (de)" */
-            ui->lang->addItem(locale.nativeLanguageName() + QString(" - ") + locale.nativeCountryName() + QString(" (") + langStr + QString(")"), QVariant(langStr));
-#else
-            /** display language strings as "language - country (locale name)", e.g. "German - Germany (de)" */
-            ui->lang->addItem(QLocale::languageToString(locale.language()) + QString(" - ") + QLocale::countryToString(locale.country()) + QString(" (") + langStr + QString(")"), QVariant(langStr));
-#endif
-        }
-        else
-        {
-#if QT_VERSION >= 0x040800
-            /** display language strings as "native language (locale name)", e.g. "Deutsch (de)" */
-            ui->lang->addItem(locale.nativeLanguageName() + QString(" (") + langStr + QString(")"), QVariant(langStr));
-#else
-            /** display language strings as "language (locale name)", e.g. "German (de)" */
-            ui->lang->addItem(QLocale::languageToString(locale.language()) + QString(" (") + langStr + QString(")"), QVariant(langStr));
-#endif
-        }
-    }
 
     /* Widget-to-option mapper */
     mapper = new MonitoredDataMapper(this);
@@ -105,9 +69,6 @@ void OptionsDialog::setModel(OptionsModel *model)
         mapper->toFirst();
     }
 
-    /* warn only when language selection changes by user action (placed here so init via mapper doesn't trigger this) */
-    connect(ui->lang, SIGNAL(valueChanged()), this, SLOT(showRestartWarning_Lang()));
-
     /* disable apply button after settings are loaded as there is nothing to save */
     disableApplyButton();
 }
@@ -119,9 +80,6 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->proxyIp, OptionsModel::ProxyIP);
     mapper->addMapping(ui->proxyPort, OptionsModel::ProxyPort);
     mapper->addMapping(ui->socksVersion, OptionsModel::ProxySocksVersion);
-
-    /* Display */
-    mapper->addMapping(ui->lang, OptionsModel::Language);
 }
 
 void OptionsDialog::enableApplyButton()
@@ -175,15 +133,6 @@ void OptionsDialog::showRestartWarning_Proxy()
     {
         QMessageBox::warning(this, tr("Warning"), tr("This setting will take effect after restarting Peercoin."), QMessageBox::Ok);
         fRestartWarningDisplayed_Proxy = true;
-    }
-}
-
-void OptionsDialog::showRestartWarning_Lang()
-{
-    if(!fRestartWarningDisplayed_Lang)
-    {
-        QMessageBox::warning(this, tr("Warning"), tr("This setting will take effect after restarting Peercoin."), QMessageBox::Ok);
-        fRestartWarningDisplayed_Lang = true;
     }
 }
 

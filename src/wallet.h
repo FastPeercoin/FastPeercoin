@@ -139,10 +139,6 @@ public:
 
     bool LoadMinVersion(int nVersion) { nWalletVersion = nVersion; nWalletMaxVersion = std::max(nWalletMaxVersion, nVersion); return true; }
 
-    // Adds an encrypted key to the store, and saves it to disk.
-    bool AddCryptedKey(const CPubKey &vchPubKey, const std::vector<unsigned char> &vchCryptedSecret);
-    // Adds an encrypted key to the store, without saving it to disk (used by LoadWallet)
-    bool LoadCryptedKey(const CPubKey &vchPubKey, const std::vector<unsigned char> &vchCryptedSecret);
     bool AddCScript(const CScript& redeemScript);
     bool LoadCScript(const CScript& redeemScript) { return CCryptoKeyStore::AddCScript(redeemScript); }
 

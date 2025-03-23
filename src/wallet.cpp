@@ -59,24 +59,6 @@ bool CWallet::AddKey(const CKey& key)
     return true;
 }
 
-bool CWallet::AddCryptedKey(const CPubKey &vchPubKey, const vector<unsigned char> &vchCryptedSecret)
-{
-    if (!CCryptoKeyStore::AddCryptedKey(vchPubKey, vchCryptedSecret))
-        return false;
-    if (!fFileBacked)
-        return true;
-    {
-        LOCK(cs_wallet);
-        return CWalletDB(strWalletFile).WriteCryptedKey(vchPubKey, vchCryptedSecret);
-    }
-    return false;
-}
-
-bool CWallet::LoadCryptedKey(const CPubKey &vchPubKey, const std::vector<unsigned char> &vchCryptedSecret)
-{
-    return CCryptoKeyStore::AddCryptedKey(vchPubKey, vchCryptedSecret);
-}
-
 bool CWallet::AddCScript(const CScript& redeemScript)
 {
     if (!CCryptoKeyStore::AddCScript(redeemScript))

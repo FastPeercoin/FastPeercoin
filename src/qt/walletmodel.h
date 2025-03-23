@@ -51,13 +51,6 @@ public:
         Aborted
     };
 
-    enum EncryptionStatus
-    {
-        Unencrypted,  // !wallet->IsCrypted()
-        Locked,       // wallet->IsCrypted() && wallet->IsLocked()
-        Unlocked      // wallet->IsCrypted() && !wallet->IsLocked()
-    };
-
     OptionsModel *getOptionsModel();
     AddressTableModel *getAddressTableModel();
     TransactionTableModel *getTransactionTableModel();
@@ -67,7 +60,6 @@ public:
     qint64 getUnconfirmedBalance() const;
     qint64 getImmatureBalance() const;
     int getNumTransactions() const;
-    EncryptionStatus getEncryptionStatus() const;
 
     // Check address for validity
     bool validateAddress(const QString &address);
@@ -113,7 +105,6 @@ private:
     qint64 cachedUnconfirmedBalance;
     qint64 cachedImmatureBalance;
     qint64 cachedNumTransactions;
-    EncryptionStatus cachedEncryptionStatus;
     int cachedNumBlocks;
 
     QTimer *pollTimer;

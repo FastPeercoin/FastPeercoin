@@ -18,7 +18,6 @@ WalletModel::WalletModel(CWallet *wallet, OptionsModel *optionsModel, QObject *p
     cachedBalance(0), cachedStake(0), 
     cachedUnconfirmedBalance(0), cachedImmatureBalance(0),
     cachedNumTransactions(0),
-    cachedEncryptionStatus(Unencrypted),
     cachedNumBlocks(0)
 {
     addressTableModel = new AddressTableModel(wallet, this);

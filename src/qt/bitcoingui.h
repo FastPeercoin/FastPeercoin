@@ -76,7 +76,6 @@ private:
     ClientModel *clientModel;
     WalletFrame *walletFrame;
 
-    QLabel *labelEncryptionIcon;
     QLabel *labelConnectionsIcon;
     QLabel *labelBlocksIcon;
     QLabel *progressBarLabel;

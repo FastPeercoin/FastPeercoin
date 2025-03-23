@@ -110,11 +110,8 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     QHBoxLayout *frameBlocksLayout = new QHBoxLayout(frameBlocks);
     frameBlocksLayout->setContentsMargins(3,0,3,0);
     frameBlocksLayout->setSpacing(3);
-    labelEncryptionIcon = new QLabel();
     labelConnectionsIcon = new QLabel();
     labelBlocksIcon = new QLabel();
-    frameBlocksLayout->addStretch();
-    frameBlocksLayout->addWidget(labelEncryptionIcon);
     frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(labelConnectionsIcon);
     frameBlocksLayout->addStretch();

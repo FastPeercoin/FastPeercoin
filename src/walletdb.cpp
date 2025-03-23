@@ -186,7 +186,7 @@ CWalletDB::ReorderTransactions(CWallet* pwallet)
 bool
 ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
              int& nFileVersion, vector<uint256>& vWalletUpgrade,
-             bool& fIsEncrypted,  bool& fAnyUnordered, string& strType, string& strErr)
+             bool& fAnyUnordered, string& strType, string& strErr)
 {
     try {
         // Unserialize
@@ -330,19 +330,6 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             if (pwallet->nMasterKeyMaxID < nID)
                 pwallet->nMasterKeyMaxID = nID;
         }
-        else if (strType == "ckey")
-        {
-            vector<unsigned char> vchPubKey;
-            ssKey >> vchPubKey;
-            vector<unsigned char> vchPrivKey;
-            ssValue >> vchPrivKey;
-            if (!pwallet->LoadCryptedKey(vchPubKey, vchPrivKey))
-            {
-                strErr = "Error reading wallet database: LoadCryptedKey failed";
-                return false;
-            }
-            fIsEncrypted = true;
-        }
         else if (strType == "defaultkey")
         {
             ssValue >> pwallet->vchDefaultKey;
@@ -393,7 +380,6 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet)
     pwallet->vchDefaultKey = CPubKey();
     int nFileVersion = 0;
     vector<uint256> vWalletUpgrade;
-    bool fIsEncrypted = false;
     bool fAnyUnordered = false;
     bool fNoncriticalErrors = false;
     DBErrors result = DB_LOAD_OK;
@@ -433,7 +419,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet)
             // Try to be tolerant of single corrupt records:
             string strType, strErr;
             if (!ReadKeyValue(pwallet, ssKey, ssValue, nFileVersion,
-                              vWalletUpgrade, fIsEncrypted, fAnyUnordered, strType, strErr))
+                              vWalletUpgrade, fAnyUnordered, strType, strErr))
             {
                 // losing keys is considered a catastrophic error, anything else
                 // we assume the user can live with:
@@ -472,10 +458,6 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet)
 
     BOOST_FOREACH(uint256 hash, vWalletUpgrade)
         WriteTx(hash, pwallet->mapWallet[hash]);
-
-    // Rewrite encrypted wallets of versions 0.4.0 and 0.5.0rc:
-    if (fIsEncrypted && (nFileVersion == 40000 || nFileVersion == 50000))
-        return DB_NEED_REWRITE;
 
     if (nFileVersion < CLIENT_VERSION) // Update
         WriteVersion(CLIENT_VERSION);
@@ -678,7 +660,6 @@ bool CWalletDB::Recover(CDBEnv& dbenv, std::string filename, bool fOnlyKeys)
     CWallet dummyWallet;
     int nFileVersion = 0;
     vector<uint256> vWalletUpgrade;
-    bool fIsEncrypted = false;
     bool fAnyUnordered = false;
 
     DbTxn* ptxn = dbenv.TxnBegin();
@@ -691,7 +672,7 @@ bool CWalletDB::Recover(CDBEnv& dbenv, std::string filename, bool fOnlyKeys)
             string strType, strErr;
             bool fReadOK = ReadKeyValue(&dummyWallet, ssKey, ssValue,
                                         nFileVersion, vWalletUpgrade,
-                                        fIsEncrypted, fAnyUnordered,
+                                        fAnyUnordered,
                                         strType, strErr);
             if (!IsKeyType(strType))
                 continue;

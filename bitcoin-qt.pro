@@ -165,7 +165,6 @@ HEADERS += src/qt/bitcoingui.h \
     src/qt/qvalidatedlineedit.h \
     src/qt/bitcoinunits.h \
     src/qt/qvaluecombobox.h \
-    src/qt/askpassphrasedialog.h \
     src/protocol.h \
     src/qt/notificator.h \
     src/qt/paymentserver.h \
@@ -234,7 +233,6 @@ SOURCES += src/qt/bitcoin.cpp \
     src/qt/qvalidatedlineedit.cpp \
     src/qt/bitcoinunits.cpp \
     src/qt/qvaluecombobox.cpp \
-    src/qt/askpassphrasedialog.cpp \
     src/protocol.cpp \
     src/qt/notificator.cpp \
     src/kernel.cpp \
@@ -256,7 +254,6 @@ FORMS += src/qt/forms/sendcoinsdialog.ui \
     src/qt/forms/transactiondescdialog.ui \
     src/qt/forms/overviewpage.ui \
     src/qt/forms/sendcoinsentry.ui \
-    src/qt/forms/askpassphrasedialog.ui \
     src/qt/forms/optionsdialog.ui
 
 contains(USE_QRCODE, 1) {

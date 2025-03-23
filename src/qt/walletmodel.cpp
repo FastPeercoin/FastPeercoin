@@ -69,14 +69,6 @@ int WalletModel::getNumTransactions() const
     return numTransactions;
 }
 
-void WalletModel::updateStatus()
-{
-    EncryptionStatus newEncryptionStatus = getEncryptionStatus();
-
-    if(cachedEncryptionStatus != newEncryptionStatus)
-        emit encryptionStatusChanged(newEncryptionStatus);
-}
-
 void WalletModel::pollBalanceChanged()
 {
     if(nBestHeight != cachedNumBlocks)
@@ -253,61 +245,6 @@ TransactionTableModel *WalletModel::getTransactionTableModel()
     return transactionTableModel;
 }
 
-WalletModel::EncryptionStatus WalletModel::getEncryptionStatus() const
-{
-    if(!wallet->IsCrypted())
-    {
-        return Unencrypted;
-    }
-    else if(wallet->IsLocked())
-    {
-        return Locked;
-    }
-    else
-    {
-        return Unlocked;
-    }
-}
-
-bool WalletModel::setWalletEncrypted(bool encrypted, const SecureString &passphrase)
-{
-    if(encrypted)
-    {
-        // Encrypt
-        return wallet->EncryptWallet(passphrase);
-    }
-    else
-    {
-        // Decrypt -- TODO; not supported yet
-        return false;
-    }
-}
-
-bool WalletModel::setWalletLocked(bool locked, const SecureString &passPhrase)
-{
-    if(locked)
-    {
-        // Lock
-        return wallet->Lock();
-    }
-    else
-    {
-        // Unlock
-        return wallet->Unlock(passPhrase);
-    }
-}
-
-bool WalletModel::changePassphrase(const SecureString &oldPass, const SecureString &newPass)
-{
-    bool retval;
-    {
-        LOCK(wallet->cs_wallet);
-        wallet->Lock(); // Make sure wallet is locked before attempting pass change
-        retval = wallet->ChangeWalletPassphrase(oldPass, newPass);
-    }
-    return retval;
-}
-
 // Handlers for core signals
 static void NotifyKeyStoreStatusChanged(WalletModel *walletmodel, CCryptoKeyStore *wallet)
 {
@@ -347,48 +284,6 @@ void WalletModel::unsubscribeFromCoreSignals()
     wallet->NotifyStatusChanged.disconnect(boost::bind(&NotifyKeyStoreStatusChanged, this, _1));
     wallet->NotifyAddressBookChanged.disconnect(boost::bind(NotifyAddressBookChanged, this, _1, _2, _3, _4, _5));
     wallet->NotifyTransactionChanged.disconnect(boost::bind(NotifyTransactionChanged, this, _1, _2, _3));
-}
-
-// WalletModel::UnlockContext implementation
-WalletModel::UnlockContext WalletModel::requestUnlock()
-{
-    bool was_locked = getEncryptionStatus() == Locked;
-    if ((!was_locked) && fWalletUnlockMintOnly)
-    {
-        setWalletLocked(true);
-        was_locked = getEncryptionStatus() == Locked;
-    }
-    if(was_locked)
-    {
-        // Request UI to unlock wallet
-        emit requireUnlock();
-    }
-    // If wallet is still locked, unlock was failed or cancelled, mark context as invalid
-    bool valid = getEncryptionStatus() != Locked;
-
-    return UnlockContext(this, valid, was_locked && !fWalletUnlockMintOnly);
-}
-
-WalletModel::UnlockContext::UnlockContext(WalletModel *wallet, bool valid, bool relock):
-        wallet(wallet),
-        valid(valid),
-        relock(relock)
-{
-}
-
-WalletModel::UnlockContext::~UnlockContext()
-{
-    if(valid && relock)
-    {
-        wallet->setWalletLocked(true);
-    }
-}
-
-void WalletModel::UnlockContext::CopyFrom(const UnlockContext& rhs)
-{
-    // Transfer context; old object no longer relocks wallet
-    *this = rhs;
-    rhs.relock = false;
 }
 
 bool WalletModel::getPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const

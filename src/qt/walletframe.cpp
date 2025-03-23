@@ -94,28 +94,3 @@ void WalletFrame::gotoSendCoinsPage(QString addr)
 {
     walletStack->gotoSendCoinsPage(addr);
 }
-
-void WalletFrame::encryptWallet(bool status)
-{
-    walletStack->encryptWallet(status);
-}
-
-void WalletFrame::decryptForMinting(bool status)
-{
-    walletStack->decryptForMinting(status);
-}
-
-void WalletFrame::changePassphrase()
-{
-    walletStack->changePassphrase();
-}
-
-void WalletFrame::unlockWallet()
-{
-    walletStack->unlockWallet();
-}
-
-void WalletFrame::setEncryptionStatus()
-{
-    walletStack->setEncryptionStatus();
-}

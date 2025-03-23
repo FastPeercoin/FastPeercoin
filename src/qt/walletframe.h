@@ -48,21 +48,6 @@ public slots:
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */
     void gotoSendCoinsPage(QString addr = "");
-
-    /** Encrypt the wallet */
-    void encryptWallet(bool status);
-    /** Decrypt wallet for minting only */
-    void decryptForMinting(bool status);
-    /** Change encrypted wallet passphrase */
-    void changePassphrase();
-    /** Ask for passphrase to unlock wallet temporarily */
-    void unlockWallet();
-
-    /** Set the encryption status as shown in the UI.
-     @param[in] status            current encryption status
-     @see WalletModel::EncryptionStatus
-     */
-    void setEncryptionStatus();
 };
 
 #endif // WALLETFRAME_H

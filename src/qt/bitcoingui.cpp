@@ -60,9 +60,6 @@ const QString BitcoinGUI::DEFAULT_WALLET = "~Default";
 BitcoinGUI::BitcoinGUI(QWidget *parent) :
     QMainWindow(parent),
     clientModel(0),
-    encryptWalletAction(0),
-    decryptForMintingAction(0),
-    changePassphraseAction(0),
     notificator(0),
     prevBlocks(0)
 {
@@ -195,20 +192,8 @@ void BitcoinGUI::createActions()
     optionsAction->setStatusTip(tr("Modify configuration options for Peercoin"));
     optionsAction->setMenuRole(QAction::PreferencesRole);
 
-    encryptWalletAction = new QAction(QIcon(":/icons/lock_closed"), tr("&Encrypt Wallet..."), this);
-    encryptWalletAction->setStatusTip(tr("Encrypt the private keys that belong to your wallet"));
-    encryptWalletAction->setCheckable(true);
-    decryptForMintingAction = new QAction(QIcon(":/icons/lock_closed"), tr("&Decrypt Wallet for Minting Only"), this);
-    decryptForMintingAction->setStatusTip(tr("Decrypt wallet only for minting. Sending coins will still require the password."));
-    decryptForMintingAction->setCheckable(true);
-    changePassphraseAction = new QAction(QIcon(":/icons/key"), tr("&Change Passphrase..."), this);
-    changePassphraseAction->setStatusTip(tr("Change the passphrase used for wallet encryption"));
-
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     connect(optionsAction, SIGNAL(triggered()), this, SLOT(optionsClicked()));
-    connect(encryptWalletAction, SIGNAL(triggered(bool)), walletFrame, SLOT(encryptWallet(bool)));
-    connect(decryptForMintingAction, SIGNAL(triggered(bool)), walletFrame, SLOT(decryptForMinting(bool)));
-    connect(changePassphraseAction, SIGNAL(triggered()), walletFrame, SLOT(changePassphrase()));
 }
 
 void BitcoinGUI::createMenuBar()
@@ -226,10 +211,6 @@ void BitcoinGUI::createMenuBar()
     file->addAction(quitAction);
 
     QMenu *settings = appMenuBar->addMenu(tr("&Settings"));
-    settings->addAction(encryptWalletAction);
-    settings->addAction(decryptForMintingAction);
-    settings->addAction(changePassphraseAction);
-    settings->addSeparator();
     settings->addAction(optionsAction);
 }
 
@@ -545,41 +526,6 @@ void BitcoinGUI::handleURI(QString strURI)
     if (!walletFrame->handleURI(strURI))
         message(tr("URI handling"), tr("URI can not be parsed! This can be caused by an invalid Peercoin address or malformed URI parameters."),
                   CClientUIInterface::ICON_WARNING);
-}
-
-void BitcoinGUI::setEncryptionStatus(int status)
-{
-    switch(status)
-    {
-    case WalletModel::Unencrypted:
-        labelEncryptionIcon->hide();
-        encryptWalletAction->setChecked(false);
-        changePassphraseAction->setEnabled(false);
-        encryptWalletAction->setEnabled(true);
-        decryptForMintingAction->setEnabled(false);
-        decryptForMintingAction->setChecked(false);
-        break;
-    case WalletModel::Unlocked:
-        labelEncryptionIcon->show();
-        labelEncryptionIcon->setPixmap(QIcon(":/icons/lock_open").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
-        labelEncryptionIcon->setToolTip(fWalletUnlockMintOnly? tr("Wallet is <b>encrypted</b> and currently <b>unlocked for block minting only</b>") : tr("Wallet is <b>encrypted</b> and currently <b>unlocked</b>"));
-        encryptWalletAction->setChecked(true);
-        changePassphraseAction->setEnabled(true);
-        encryptWalletAction->setEnabled(false); // TODO: decrypt currently not supported
-        decryptForMintingAction->setEnabled(fWalletUnlockMintOnly);
-        decryptForMintingAction->setChecked(fWalletUnlockMintOnly);
-        break;
-    case WalletModel::Locked:
-        labelEncryptionIcon->show();
-        labelEncryptionIcon->setPixmap(QIcon(":/icons/lock_closed").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
-        labelEncryptionIcon->setToolTip(tr("Wallet is <b>encrypted</b> and currently <b>locked</b>"));
-        encryptWalletAction->setChecked(true);
-        changePassphraseAction->setEnabled(true);
-        encryptWalletAction->setEnabled(false); // TODO: decrypt currently not supported
-        decryptForMintingAction->setEnabled(true);
-        decryptForMintingAction->setChecked(false);
-        break;
-    }
 }
 
 void BitcoinGUI::showNormalIfMinimized(bool fToggleHidden)

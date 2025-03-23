@@ -19,8 +19,6 @@
 #include "util.h"
 #include "walletdb.h"
 
-extern bool fWalletUnlockMintOnly;
-
 class CAccountingEntry;
 class CWalletTx;
 class CReserveKey;
@@ -73,8 +71,6 @@ class CWallet : public CCryptoKeyStore
 private:
     bool SelectCoins(int64 nTargetValue, unsigned int nSpendTime, std::set<std::pair<const CWalletTx*,unsigned int> >& setCoinsRet, int64& nValueRet) const;
 
-    CWalletDB *pwalletdbEncryption;
-
     // the current wallet version: clients below this version are not able to load the wallet
     int nWalletVersion;
 
@@ -100,7 +96,6 @@ public:
         nWalletMaxVersion = FEATURE_BASE;
         fFileBacked = false;
         nMasterKeyMaxID = 0;
-        pwalletdbEncryption = NULL;
         nOrderPosNext = 0;
     }
     CWallet(std::string strWalletFileIn)
@@ -110,7 +105,6 @@ public:
         strWalletFile = strWalletFileIn;
         fFileBacked = true;
         nMasterKeyMaxID = 0;
-        pwalletdbEncryption = NULL;
         nOrderPosNext = 0;
     }
 
@@ -151,10 +145,6 @@ public:
     bool LoadCryptedKey(const CPubKey &vchPubKey, const std::vector<unsigned char> &vchCryptedSecret);
     bool AddCScript(const CScript& redeemScript);
     bool LoadCScript(const CScript& redeemScript) { return CCryptoKeyStore::AddCScript(redeemScript); }
-
-    bool Unlock(const SecureString& strWalletPassphrase);
-    bool ChangeWalletPassphrase(const SecureString& strOldWalletPassphrase, const SecureString& strNewWalletPassphrase);
-    bool EncryptWallet(const SecureString& strWalletPassphrase);
 
     /** Increment the next transaction order id
         @return next transaction order id

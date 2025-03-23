@@ -27,8 +27,6 @@ QT_TRANSLATE_NOOP("bitcoin-core", ""
 "Error: This transaction requires a transaction fee of at least %s because of "
 "its amount, complexity, or use of recently received funds!"),
 QT_TRANSLATE_NOOP("bitcoin-core", ""
-"Error: Wallet unlocked for block minting only, unable to create transaction."),
-QT_TRANSLATE_NOOP("bitcoin-core", ""
 "Execute command when a relevant alert is received (%s in cmd is replaced by "
 "message)"),
 QT_TRANSLATE_NOOP("bitcoin-core", ""
@@ -91,7 +89,6 @@ QT_TRANSLATE_NOOP("bitcoin-core", "Error loading wallet.dat: Wallet corrupted"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Error loading wallet.dat: Wallet requires newer version of Peercoin"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Error opening block database"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Error: Disk space is low!"),
-QT_TRANSLATE_NOOP("bitcoin-core", "Error: Wallet locked, unable to create transaction!"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Error: system error: "),
 QT_TRANSLATE_NOOP("bitcoin-core", "Failed to listen on any port. Use -listen=0 if you want this."),
 QT_TRANSLATE_NOOP("bitcoin-core", "Failed to read block info"),

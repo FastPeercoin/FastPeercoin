@@ -87,34 +87,6 @@ public:
     // Send coins to a list of recipients
     SendCoinsReturn sendCoins(const QList<SendCoinsRecipient> &recipients);
 
-    // Wallet encryption
-    bool setWalletEncrypted(bool encrypted, const SecureString &passphrase);
-    // Passphrase only needed when unlocking
-    bool setWalletLocked(bool locked, const SecureString &passPhrase=SecureString());
-    bool changePassphrase(const SecureString &oldPass, const SecureString &newPass);
-
-    // RAI object for unlocking wallet, returned by requestUnlock()
-    class UnlockContext
-    {
-    public:
-        UnlockContext(WalletModel *wallet, bool valid, bool relock);
-        ~UnlockContext();
-
-        bool isValid() const { return valid; }
-
-        // Copy operator and constructor transfer the context
-        UnlockContext(const UnlockContext& obj) { CopyFrom(obj); }
-        UnlockContext& operator=(const UnlockContext& rhs) { CopyFrom(rhs); return *this; }
-    private:
-        WalletModel *wallet;
-        bool valid;
-        mutable bool relock; // mutable, as it can be set to false by copying
-
-        void CopyFrom(const UnlockContext& rhs);
-    };
-
-    UnlockContext requestUnlock();
-
     bool getPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const;
     void getOutputs(const std::vector<COutPoint>& vOutpoints, std::vector<COutput>& vOutputs);
     void listCoins(std::map<QString, std::vector<COutput> >& mapCoins) const;
@@ -157,20 +129,10 @@ signals:
     // Number of transactions in wallet changed
     void numTransactionsChanged(int count);
 
-    // Encryption status of wallet changed
-    void encryptionStatusChanged(int status);
-
-    // Signal emitted when wallet needs to be unlocked
-    // It is valid behaviour for listeners to keep the wallet locked after this signal;
-    // this means that the unlocking failed or was cancelled.
-    void requireUnlock();
-
     // Asynchronous message notification
     void message(const QString &title, const QString &message, unsigned int style);
 
 public slots:
-    /* Wallet status might have changed */
-    void updateStatus();
     /* New transaction, or transaction changed status */
     void updateTransaction(const QString &hash, int status);
     /* New, updated or removed address book entry */

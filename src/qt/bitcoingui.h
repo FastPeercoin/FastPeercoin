@@ -88,14 +88,8 @@ private:
     QAction *quitAction;
     QAction *sendCoinsAction;
     QAction *addressBookAction;
-    QAction *aboutAction;
     QAction *receiveCoinsAction;
     QAction *optionsAction;
-    QAction *toggleHideAction;
-    QAction *encryptWalletAction;
-    QAction *decryptForMintingAction;
-    QAction *changePassphraseAction;
-    QAction *aboutQtAction;
 
     Notificator *notificator;
     TransactionView *transactionView;
@@ -120,11 +114,6 @@ public slots:
     void setNumConnections(int count);
     /** Set number of blocks shown in the UI */
     void setNumBlocks(int count, int nTotalBlocks);
-    /** Set the encryption status as shown in the UI.
-       @param[in] status            current encryption status
-       @see WalletModel::EncryptionStatus
-    */
-    void setEncryptionStatus(int status);
 
     /** Notify the user of an event from the core network or transaction handling code.
        @param[in] title     the message box / notification title

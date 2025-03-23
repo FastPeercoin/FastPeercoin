@@ -111,40 +111,9 @@ void WalletStack::gotoSendCoinsPage(QString addr)
         i.value()->gotoSendCoinsPage(addr);
 }
 
-void WalletStack::encryptWallet(bool status)
-{
-    WalletView *walletView = (WalletView*)currentWidget();
-    if (walletView) walletView->encryptWallet(status);
-}
-
-void WalletStack::decryptForMinting(bool status)
-{
-    WalletView *walletView = (WalletView*)currentWidget();
-    if (walletView) walletView->decryptForMinting(status);
-}
-
-void WalletStack::changePassphrase()
-{
-    WalletView *walletView = (WalletView*)currentWidget();
-    if (walletView) walletView->changePassphrase();
-}
-
-void WalletStack::unlockWallet()
-{
-    WalletView *walletView = (WalletView*)currentWidget();
-    if (walletView) walletView->unlockWallet();
-}
-
-void WalletStack::setEncryptionStatus()
-{
-    WalletView *walletView = (WalletView*)currentWidget();
-    if (walletView) walletView->setEncryptionStatus();
-}
-
 void WalletStack::setCurrentWallet(const QString& name)
 {
     if (mapWalletViews.count(name) == 0) return;
     WalletView *walletView = mapWalletViews.value(name);
     setCurrentWidget(walletView);
-    walletView->setEncryptionStatus();
 }

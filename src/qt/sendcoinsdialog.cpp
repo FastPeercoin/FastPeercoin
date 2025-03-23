@@ -7,7 +7,6 @@
 #include "optionsmodel.h"
 #include "sendcoinsentry.h"
 #include "guiutil.h"
-#include "askpassphrasedialog.h"
 #include "base58.h"
 #include "addresstablemodel.h"
 
@@ -103,14 +102,6 @@ void SendCoinsDialog::on_sendButton_clicked()
 
     if(retval != QMessageBox::Yes)
     {
-        fNewRecipientAllowed = true;
-        return;
-    }
-
-    WalletModel::UnlockContext ctx(model->requestUnlock());
-    if(!ctx.isValid())
-    {
-        // Unlock wallet was cancelled
         fNewRecipientAllowed = true;
         return;
     }

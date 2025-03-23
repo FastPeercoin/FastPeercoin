@@ -81,16 +81,6 @@ public slots:
         The new items are those between start and end inclusive, under the given parent item.
     */
     void incomingTransaction(const QModelIndex& parent, int start, int /*end*/);
-    /** Encrypt the wallet */
-    void encryptWallet(bool status);
-    /** Decrypt wallet for minting only */
-    void decryptForMinting(bool status);
-    /** Change encrypted wallet passphrase */
-    void changePassphrase();
-    /** Ask for passphrase to unlock wallet temporarily */
-    void unlockWallet();
-
-    void setEncryptionStatus();
 
 signals:
     /** Signal that we want to show the main window */

@@ -4,7 +4,6 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "alert.h"
 #include "db.h"
 #include "txdb.h"
 #include "net.h"
@@ -2008,24 +2007,6 @@ bool SetBestChain(CValidationState &state, CBlockIndex* pindexNew)
       DateTimeStrFormat("%Y-%m-%d %H:%M:%S", pindexBest->GetBlockTime()).c_str()
     );
 
-    // Check the version of the last 100 blocks to see if we need to upgrade:
-    if (!fIsInitialDownload)
-    {
-        int nUpgraded = 0;
-        const CBlockIndex* pindex = pindexBest;
-        for (int i = 0; i < 100 && pindex != NULL; i++)
-        {
-            if (pindex->nVersion > CBlock::CURRENT_VERSION)
-                ++nUpgraded;
-            pindex = pindex->pprev;
-        }
-        if (nUpgraded > 0)
-            printf("SetBestChain: %d of last 100 blocks above version %d\n", nUpgraded, CBlock::CURRENT_VERSION);
-        if (nUpgraded > 100/2)
-            // strMiscWarning is read by GetWarnings(), called by Qt and the JSON-RPC code to warn the user:
-            strMiscWarning = _("Warning: This version is obsolete, upgrade required!");
-    }
-
     std::string strCmd = GetArg("-blocknotify", "");
 
     if (!fIsInitialDownload && !strCmd.empty())
@@ -3379,85 +3360,10 @@ bool LoadExternalBlockFile(FILE* fileIn, CDiskBlockPos *dbp)
     return nLoaded > 0;
 }
 
-
-
-
-
-
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////
-//
-// CAlert
-//
-
-extern map<uint256, CAlert> mapAlerts;
-extern CCriticalSection cs_mapAlerts;
-
-static string strMintWarning;
-
-string GetWarnings(string strFor)
-{
-    int nPriority = 0;
-    string strStatusBar;
-    string strRPC;
-
-    if (GetBoolArg("-testsafemode"))
-        strRPC = "test";
-
-    // ppcoin: wallet lock warning for minting
-    if (strMintWarning != "")
-    {
-        nPriority = 0;
-        strStatusBar = strMintWarning;
-    }
-
-    // Misc warnings like out of disk space and clock is wrong
-    if (strMiscWarning != "")
-    {
-        nPriority = 1000;
-        strStatusBar = strMiscWarning;
-    }
-
-    // Alerts
-    {
-        LOCK(cs_mapAlerts);
-        BOOST_FOREACH(PAIRTYPE(const uint256, CAlert)& item, mapAlerts)
-        {
-            const CAlert& alert = item.second;
-            if (alert.AppliesToMe() && alert.nPriority > nPriority)
-            {
-                nPriority = alert.nPriority;
-                strStatusBar = alert.strStatusBar;
-                if (nPriority > 1000)
-                    strRPC = strStatusBar;  // ppcoin: safe mode for high alert
-            }
-        }
-    }
-
-    if (strFor == "statusbar")
-        return strStatusBar;
-    else if (strFor == "rpc")
-        return strRPC;
-    assert(!"GetWarnings() : invalid parameter");
-    return "error";
-}
-
-
-
-
-
-
-
-
 //////////////////////////////////////////////////////////////////////////////
 //
 // Messages
 //
-
-
 bool static AlreadyHave(const CInv& inv)
 {
     switch (inv.type)
@@ -3710,13 +3616,6 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
                 addrman.Add(addrFrom, addrFrom);
                 addrman.Good(addrFrom);
             }
-        }
-
-        // Relay alerts
-        {
-            LOCK(cs_mapAlerts);
-            BOOST_FOREACH(PAIRTYPE(const uint256, CAlert)& item, mapAlerts)
-                item.second.RelayTo(pfrom);
         }
 
         pfrom->fSuccessfullyConnected = true;
@@ -4112,36 +4011,6 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
         }
     }
 
-
-    else if (strCommand == "alert")
-    {
-        CAlert alert;
-        vRecv >> alert;
-
-        uint256 alertHash = alert.GetHash();
-        if (pfrom->setKnown.count(alertHash) == 0)
-        {
-            if (alert.ProcessAlert())
-            {
-                // Relay
-                pfrom->setKnown.insert(alertHash);
-                {
-                    LOCK(cs_vNodes);
-                    BOOST_FOREACH(CNode* pnode, vNodes)
-                        alert.RelayTo(pnode);
-                }
-            }
-            else {
-                // Small DoS penalty so peers that send us lots of
-                // duplicate/expired/invalid-signature/whatever alerts
-                // eventually get banned.
-                // This isn't a Misbehaving(100) (immediate ban) because the
-                // peer might be an older or different implementation with
-                // a different signature key, etc.
-                pfrom->Misbehaving(10);
-            }
-        }
-    }
 
     else if (strCommand == "filterload")
     {
@@ -5063,11 +4932,7 @@ bool CheckWork(CBlock* pblock, CWallet& wallet, CReserveKey& reservekey)
     return true;
 }
 
-#ifdef TESTING
-void BitcoinMiner(CWallet *pwallet, bool fProofOfStake, bool fGenerateSingleBlock)
-#else
 void BitcoinMiner(CWallet *pwallet, bool fProofOfStake)
-#endif
 {
     printf("CPUMiner started for proof-of-%s\n", fProofOfStake? "stake" : "work");
     SetThreadPriority(THREAD_PRIORITY_LOWEST);
@@ -5077,15 +4942,9 @@ void BitcoinMiner(CWallet *pwallet, bool fProofOfStake)
     CReserveKey reservekey(pwallet);
     unsigned int nExtraNonce = 0;
 
-    string strMintMessage = _("Info: Minting suspended due to locked wallet.");
-    string strMintSyncMessage = _("Info: Minting suspended while synchronizing wallet.");
-    string strMintDisabledMessage = _("Info: Minting disabled by 'nominting' option.");
-    string strMintBlockMessage = _("Info: Minting suspended due to block creation failure.");
-
     try { ploop {
-        if (GetBoolArg("-nominting"))
+        if (fProofOfStake && GetBoolArg("-nominting"))
         {
-            strMintWarning = strMintDisabledMessage;
             return;
         }
 
@@ -5094,10 +4953,8 @@ void BitcoinMiner(CWallet *pwallet, bool fProofOfStake)
 
         while (pwallet->IsLocked())
         {
-            strMintWarning = strMintMessage;
             MilliSleep(1000);
         }
-        strMintWarning = "";
 
         //
         // Create new block
@@ -5108,7 +4965,6 @@ void BitcoinMiner(CWallet *pwallet, bool fProofOfStake)
         auto_ptr<CBlockTemplate> pblocktemplate(CreateNewBlock(reservekey, pwallet, fProofOfStake));
         if (!pblocktemplate.get())
         {
-            strMintWarning = strMintBlockMessage;
             MilliSleep(1000);
             continue;
         }
@@ -5123,10 +4979,8 @@ void BitcoinMiner(CWallet *pwallet, bool fProofOfStake)
             {
                 if (!pblock->SignBlock(*pwalletMain))
                 {
-                    strMintWarning = strMintMessage;
                     continue;
                 }
-                strMintWarning = "";
                 printf("CPUMiner : proof-of-stake block found %s\n", pblock->GetHash().ToString().c_str()); 
                 SetThreadPriority(THREAD_PRIORITY_NORMAL);
                 CheckWork(pblock, *pwalletMain, reservekey);
@@ -5181,10 +5035,8 @@ void BitcoinMiner(CWallet *pwallet, bool fProofOfStake)
                     assert(hash == pblock->GetHash());
                     if (!pblock->SignBlock(*pwalletMain))
                     {
-                        strMintWarning = strMintMessage;
                         break;
                     }
-                    strMintWarning = "";
                     SetThreadPriority(THREAD_PRIORITY_NORMAL);
                     CheckWork(pblock, *pwalletMain, reservekey);
                     SetThreadPriority(THREAD_PRIORITY_LOWEST);

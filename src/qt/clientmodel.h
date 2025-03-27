@@ -43,8 +43,6 @@ public:
     enum BlockSource getBlockSource() const;
     //! Return conservative estimate of total number of blocks, or 0 if unknown
     int getNumBlocksOfPeers() const;
-    //! Return warnings to be displayed in status bar
-    QString getStatusBarWarnings() const;
 
     QString formatFullVersion() const;
     QString formatBuildDate() const;
@@ -69,7 +67,6 @@ private:
 signals:
     void numConnectionsChanged(int count);
     void numBlocksChanged(int count, int countOfPeers);
-    void alertsChanged(const QString &warnings);
 
     //! Asynchronous message notification
     void message(const QString &title, const QString &message, unsigned int style);
@@ -77,7 +74,6 @@ signals:
 public slots:
     void updateTimer();
     void updateNumConnections(int numConnections);
-    void updateAlert(const QString &hash, int status);
 };
 
 #endif // CLIENTMODEL_H

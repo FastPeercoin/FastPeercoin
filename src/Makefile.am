@@ -39,7 +39,6 @@ TESTS =
 # bitcoin core #
 BITCOIN_CORE_H = \
   addrman.h \
-  alert.h \
   allocators.h \
   base58.h \
   bignum.h \
@@ -81,7 +80,6 @@ version.o: obj/build.h
 
 libpeercoin_server_a_SOURCES = \
   addrman.cpp \
-  alert.cpp \
   bloom.cpp \
   crypter.cpp \
   init.cpp \

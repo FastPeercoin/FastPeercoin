@@ -76,12 +76,6 @@ AC_ARG_ENABLE(debug,
     [use_debug=yes])
     AC_MSG_CHECKING([if compiling with debugging symbols])
 
-AC_ARG_WITH([qrencode],
-  [AS_HELP_STRING([--with-qrencode],
-  [enable QR code support (default is yes if qt is enabled and libqrencode is found)])],
-  [use_qr=$withval],
-  [use_qr=auto])
-
 AC_ARG_WITH([qtdbus],
   [AS_HELP_STRING([--with-qtdbus],
   [enable DBus support (default is yes if qt is enabled and QtDBus is found)])],
@@ -453,9 +447,6 @@ if test x$use_pkgconfig = xyes; then
     [
       PKG_CHECK_MODULES([SSL], [libssl], [INCLUDES="$INCLUDES $SSL_CFLAGS"; LIBS="$LIBS $SSL_LIBS"], [AC_MSG_ERROR(openssl  not found.)])
       PKG_CHECK_MODULES([CRYPTO], [libcrypto], [INCLUDES="$INCLUDES $CRYPTO_CFLAGS"; LIBS="$LIBS $CRYPTO_LIBS"], [AC_MSG_ERROR(libcrypto  not found.)])
-      if test x$use_qr != xno; then
-        BITCOIN_QT_CHECK([PKG_CHECK_MODULES([QR], [libqrencode], [have_qrencode=yes], [have_qrencode=no])])
-      fi
     ]
   )
 else
@@ -464,11 +455,6 @@ else
 
   AC_CHECK_HEADER([openssl/ssl.h],, AC_MSG_ERROR(libssl headers missing),)
   AC_CHECK_LIB([ssl],         [main],, AC_MSG_ERROR(libssl missing))
-
-  if test x$use_qr != xno; then
-    BITCOIN_QT_CHECK([AC_CHECK_LIB([qrencode], [main],, [have_qrencode=no])])
-    BITCOIN_QT_CHECK([AC_CHECK_HEADER([qrencode.h],, have_qrencode=no)])
-  fi
 fi
 
 AC_MSG_CHECKING([if bitcoind should be enabled])
@@ -572,23 +558,6 @@ if test x$bitcoin_enable_qt != xno; then
   fi
   AC_MSG_RESULT($bitcoin_enable_qt_dbus)
 
-  dnl enable qr support
-  AC_MSG_CHECKING([if qr should be enabled])
-  if test x$have_qrencode = xno; then
-    if test x$use_qr == xyes; then
-     AC_MSG_ERROR("QR support requested but cannot be built. use --without-qrencode")
-    fi
-    AC_MSG_RESULT(no)
-  else
-    if test x$use_qr != xno; then
-      AC_MSG_RESULT(yes)
-      AC_DEFINE([USE_QRCODE],[1],[Define if QR support should be compiled in])
-      use_qr=yes
-    else
-      AC_MSG_RESULT(no)
-    fi
-  fi
-
   if test x$XGETTEXT == x; then
     AC_MSG_WARN("xgettext is required to update qt translations")
   fi
@@ -610,7 +579,6 @@ AM_CONDITIONAL([DISABLE_MINING],[test x$disable_mining == xyes])
 AM_CONDITIONAL([ENABLE_TESTS],[test x$use_tests == xyes])
 AM_CONDITIONAL([ENABLE_QT],[test x$bitcoin_enable_qt == xyes])
 AM_CONDITIONAL([ENABLE_QT_TESTS],[test x$use_tests$bitcoin_enable_qt_test = xyesyes])
-AM_CONDITIONAL([USE_QRCODE], [test x$use_qr = xyes])
 AM_CONDITIONAL([USE_LCOV],[test x$use_lcov == xyes])
 AM_CONDITIONAL([USE_COMPARISON_TOOL],[test x$use_comparison_tool != xno])
 
@@ -637,7 +605,6 @@ AC_SUBST(LDFLAGS)
 AC_SUBST(PIC_FLAGS)
 AC_SUBST(PIE_FLAGS)
 
-AC_SUBST(USE_QRCODE)
 AC_SUBST(USE_IPV6)
 AC_SUBST(INCLUDES)
 AC_SUBST(BOOST_LIBS)

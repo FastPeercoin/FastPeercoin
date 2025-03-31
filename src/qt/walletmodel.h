@@ -6,6 +6,7 @@
 #include <map>
 
 #include "allocators.h" /* for SecureString */
+#include "outpoint.h"
 
 class OptionsModel;
 class AddressTableModel;
@@ -14,7 +15,6 @@ class CWallet;
 class CKeyID;
 class CPubKey;
 class COutput;
-class COutPoint;
 class uint256;
 
 QT_BEGIN_NAMESPACE

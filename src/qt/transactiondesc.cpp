@@ -7,6 +7,7 @@
 #include "db.h"
 #include "ui_interface.h"
 #include "base58.h"
+#include "outpoint.h"
 
 #include <string>
 

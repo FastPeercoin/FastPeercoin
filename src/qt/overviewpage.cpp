@@ -4,7 +4,6 @@
 #include "clientmodel.h"
 #include "walletmodel.h"
 #include "bitcoinunits.h"
-#include "optionsmodel.h"
 #include "transactiontablemodel.h"
 #include "transactionfilterproxy.h"
 #include "guiutil.h"
@@ -157,7 +156,7 @@ void OverviewPage::setClientModel(ClientModel *model)
 void OverviewPage::setWalletModel(WalletModel *model)
 {
     this->walletModel = model;
-    if(model && model->getOptionsModel())
+    if(model)
     {
         // Set up transaction list
         filter = new TransactionFilterProxy();

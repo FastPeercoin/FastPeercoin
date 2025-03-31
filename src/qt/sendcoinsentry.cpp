@@ -5,7 +5,6 @@
 #include "bitcoinunits.h"
 #include "addressbookpage.h"
 #include "walletmodel.h"
-#include "optionsmodel.h"
 #include "addresstablemodel.h"
 
 #include <QApplication>

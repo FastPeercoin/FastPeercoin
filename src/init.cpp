@@ -160,40 +160,40 @@ bool static Bind(const CService &addr, unsigned int flags) {
 // Core-specific options shared between UI and daemon
 std::string HelpMessage(HelpMessageMode hmm)
 {
-    string strUsage = _("Options:") + "\n" +
-        "  -?                     " + _("This help message") + "\n" +
-        "  -conf=<file>           " + _("Specify configuration file (default: peercoin.conf)") + "\n" +
-        "  -pid=<file>            " + _("Specify pid file (default: peercoind.pid)") + "\n" +
-        "  -gen                   " + _("Generate coins (default: 0)") + "\n" +
-        "  -nominting             " + _("Disable minting of POS blocks") + "\n" +
-        "  -datadir=<dir>         " + _("Specify data directory") + "\n" +
-        "  -dbcache=<n>           " + _("Set database cache size in megabytes (default: 25)") + "\n" +
-        "  -maxorphanblocks=<n>   " + _("Keep at most <n> unconnectable blocks in memory (default: 750)") + "\n" +
-        "  -maxorphantx=<n>       " + _("Keep at most <n> unconnectable transactions in memory (default: 100)") + "\n" +
-        "  -timeout=<n>           " + _("Specify connection timeout in milliseconds (default: 5000)") + "\n" +
-        "  -proxy=<ip:port>       " + _("Connect through socks proxy") + "\n" +
-        "  -socks=<n>             " + _("Select the version of socks proxy to use (4-5, default: 5)") + "\n" +
-        "  -tor=<ip:port>         " + _("Use proxy to reach tor hidden services (default: same as -proxy)") + "\n"
-        "  -dns                   " + _("Allow DNS lookups for -addnode, -seednode and -connect") + "\n" +
-        "  -port=<port>           " + _("Listen for connections on <port> (default: 9901)") + "\n" +
-        "  -maxconnections=<n>    " + _("Maintain at most <n> connections to peers (default: 125)") + "\n" +
-        "  -addnode=<ip>          " + _("Add a node to connect to and attempt to keep the connection open") + "\n" +
-        "  -connect=<ip>          " + _("Connect only to the specified node(s)") + "\n" +
-        "  -seednode=<ip>         " + _("Connect to a node to retrieve peer addresses, and disconnect") + "\n" +
-        "  -externalip=<ip>       " + _("Specify your own public address") + "\n" +
-        "  -onlynet=<net>         " + _("Only connect to nodes in network <net> (IPv4, IPv6 or Tor)") + "\n" +
-        "  -discover              " + _("Discover own IP address (default: 1 when listening and no -externalip)") + "\n" +
-        "  -listen                " + _("Accept connections from outside (default: 1 if no -proxy or -connect)") + "\n" +
-        "  -bind=<addr>           " + _("Bind to given address and always listen on it. Use [host]:port notation for IPv6") + "\n" +
-        "  -dnsseed               " + _("Find peers using DNS lookup (default: 1 unless -connect)") + "\n" +
-        "  -banscore=<n>          " + _("Threshold for disconnecting misbehaving peers (default: 100)") + "\n" +
-        "  -bantime=<n>           " + _("Number of seconds to keep misbehaving peers from reconnecting (default: 86400)") + "\n" +
-        "  -maxreceivebuffer=<n>  " + _("Maximum per-connection receive buffer, <n>*1000 bytes (default: 5000)") + "\n" +
-        "  -maxsendbuffer=<n>     " + _("Maximum per-connection send buffer, <n>*1000 bytes (default: 1000)") + "\n" +
-        "  -paytxfee=<amt>        " + _("Fee per KB to add to transactions you send") + "\n" +
-        "  -debug=<category>      " + _("Output debugging information (default: 0, supplying <category> is optional)") + "\n" +
-                                      _("If <category> is not supplied, output all debugging information.") + "\n" +
-                                      _("<category> can be:") +
+    string strUsage = std::string("Options:") + "\n" +
+        "  -?                     " + "This help message" + "\n" +
+        "  -conf=<file>           " + "Specify configuration file (default: peercoin.conf)" + "\n" +
+        "  -pid=<file>            " + "Specify pid file (default: peercoind.pid)" + "\n" +
+        "  -gen                   " + "Generate coins (default: 0)" + "\n" +
+        "  -nominting             " + "Disable minting of POS blocks" + "\n" +
+        "  -datadir=<dir>         " + "Specify data directory" + "\n" +
+        "  -dbcache=<n>           " + "Set database cache size in megabytes (default: 25)" + "\n" +
+        "  -maxorphanblocks=<n>   " + "Keep at most <n> unconnectable blocks in memory (default: 750)" + "\n" +
+        "  -maxorphantx=<n>       " + "Keep at most <n> unconnectable transactions in memory (default: 100)" + "\n" +
+        "  -timeout=<n>           " + "Specify connection timeout in milliseconds (default: 5000)" + "\n" +
+        "  -proxy=<ip:port>       " + "Connect through socks proxy" + "\n" +
+        "  -socks=<n>             " + "Select the version of socks proxy to use (4-5, default: 5)" + "\n" +
+        "  -tor=<ip:port>         " + "Use proxy to reach tor hidden services (default: same as -proxy)" + "\n"
+        "  -dns                   " + "Allow DNS lookups for -addnode, -seednode and -connect" + "\n" +
+        "  -port=<port>           " + "Listen for connections on <port> (default: 9901)" + "\n" +
+        "  -maxconnections=<n>    " + "Maintain at most <n> connections to peers (default: 125)" + "\n" +
+        "  -addnode=<ip>          " + "Add a node to connect to and attempt to keep the connection open" + "\n" +
+        "  -connect=<ip>          " + "Connect only to the specified node(s)" + "\n" +
+        "  -seednode=<ip>         " + "Connect to a node to retrieve peer addresses, and disconnect" + "\n" +
+        "  -externalip=<ip>       " + "Specify your own public address" + "\n" +
+        "  -onlynet=<net>         " + "Only connect to nodes in network <net> (IPv4, IPv6 or Tor)" + "\n" +
+        "  -discover              " + "Discover own IP address (default: 1 when listening and no -externalip)" + "\n" +
+        "  -listen                " + "Accept connections from outside (default: 1 if no -proxy or -connect)" + "\n" +
+        "  -bind=<addr>           " + "Bind to given address and always listen on it. Use [host]:port notation for IPv6" + "\n" +
+        "  -dnsseed               " + "Find peers using DNS lookup (default: 1 unless -connect)" + "\n" +
+        "  -banscore=<n>          " + "Threshold for disconnecting misbehaving peers (default: 100)" + "\n" +
+        "  -bantime=<n>           " + "Number of seconds to keep misbehaving peers from reconnecting (default: 86400)" + "\n" +
+        "  -maxreceivebuffer=<n>  " + "Maximum per-connection receive buffer, <n>*1000 bytes (default: 5000)" + "\n" +
+        "  -maxsendbuffer=<n>     " + "Maximum per-connection send buffer, <n>*1000 bytes (default: 1000)" + "\n" +
+        "  -paytxfee=<amt>        " + "Fee per KB to add to transactions you send" + "\n" +
+        "  -debug=<category>      " + "Output debugging information (default: 0, supplying <category> is optional)" + "\n" +
+                                      "If <category> is not supplied, output all debugging information." + "\n" +
+                                      "<category> can be:" +
                                         " addrman, alert, coindb, db, lock, rand, rpc, selectcoins, mempool, net"; // Don't translate these and qt below
     if (hmm == HMM_BITCOIN_QT)
     {
@@ -204,55 +204,49 @@ std::string HelpMessage(HelpMessageMode hmm)
         strUsage +=                     ".\n";
     }
     strUsage +=  
-        "  -logtimestamps         " + _("Prepend debug output with timestamp (default: 1)") + "\n" +
-        "  -shrinkdebugfile       " + _("Shrink debug.log file on client startup (default: 1 when no -debug)") + "\n" +
-        "  -printtoconsole        " + _("Send trace/debug info to console instead of debug.log file") + "\n" +
-        "  -regtest               " + _("Enter regression test mode, which uses a special chain in which blocks can be "
-                                            "solved instantly. This is intended for regression testing tools and app development.") + "\n";
-#ifdef WIN32
-        strUsage += 
-        "  -printtodebugger       " + _("Send trace/debug info to debugger") + "\n";
-#endif
+        std::string("  -logtimestamps         ") + "Prepend debug output with timestamp (default: 1)" + "\n" +
+        "  -shrinkdebugfile       " + "Shrink debug.log file on client startup (default: 1 when no -debug)" + "\n" +
+        "  -printtoconsole        " + "Send trace/debug info to console instead of debug.log file" + "\n" +
+        "  -regtest               " + "Enter regression test mode, which uses a special chain in which blocks can be "
+                                            "solved instantly. This is intended for regression testing tools and app development." + "\n";
 
     if (hmm == HMM_BITCOIN_QT)
     {
         strUsage += 
-        "  -server                " + _("Accept command line and JSON-RPC commands") + "\n";
+        std::string("  -server                ") + "Accept command line and JSON-RPC commands" + "\n";
     }
 
     if (hmm == HMM_BITCOIND)
     {
-#if !defined(WIN32)
         strUsage += 
-        "  -daemon                " + _("Run in the background as a daemon and accept commands") + "\n";
-#endif
+        std::string("  -daemon                ") + "Run in the background as a daemon and accept commands" + "\n";
     }
         strUsage +=
-        "  -rpcthreads=<n>        " + _("Set the number of threads to service RPC calls (default: 4)") + "\n" +
-        "  -blocknotify=<cmd>     " + _("Execute command when the best block changes (%s in cmd is replaced by block hash)") + "\n" +
-        "  -walletnotify=<cmd>    " + _("Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)") + "\n" +
-        "  -upgradewallet         " + _("Upgrade wallet to latest format") + "\n" +
-        "  -keypool=<n>           " + _("Set key pool size to <n> (default: 100)") + "\n" +
-        "  -rescan                " + _("Rescan the block chain for missing wallet transactions") + "\n" +
-        "  -zapwallettxes         " + _("Clear list of wallet transactions (diagnostic tool; implies -rescan)") + "\n" +
-        "  -salvagewallet         " + _("Attempt to recover private keys from a corrupt wallet.dat") + "\n" +
-        "  -checkblocks=<n>       " + _("How many blocks to check at startup (default: 288, 0 = all)") + "\n" +
-        "  -checklevel=<n>        " + _("How thorough the block verification is (0-4, default: 3)") + "\n" +
-        "  -txindex               " + _("Maintain a full transaction index (default: 0)") + "\n" +
-        "  -loadblock=<file>      " + _("Imports blocks from external blk000??.dat file") + "\n" +
-        "  -reindex               " + _("Rebuild block chain index from current blk000??.dat files") + "\n" +
-        "  -par=<n>               " + _("Set the number of script verification threads (up to 16, 0 = auto, <0 = leave that many cores free, default: 0)") + "\n" +
+        std::string("  -rpcthreads=<n>        ") + "Set the number of threads to service RPC calls (default: 4)" + "\n" +
+        "  -blocknotify=<cmd>     " + "Execute command when the best block changes (%s in cmd is replaced by block hash)" + "\n" +
+        "  -walletnotify=<cmd>    " + "Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)" + "\n" +
+        "  -upgradewallet         " + "Upgrade wallet to latest format" + "\n" +
+        "  -keypool=<n>           " + "Set key pool size to <n> (default: 100)" + "\n" +
+        "  -rescan                " + "Rescan the block chain for missing wallet transactions" + "\n" +
+        "  -zapwallettxes         " + "Clear list of wallet transactions (diagnostic tool; implies -rescan)" + "\n" +
+        "  -salvagewallet         " + "Attempt to recover private keys from a corrupt wallet.dat" + "\n" +
+        "  -checkblocks=<n>       " + "How many blocks to check at startup (default: 288, 0 = all)" + "\n" +
+        "  -checklevel=<n>        " + "How thorough the block verification is (0-4, default: 3)" + "\n" +
+        "  -txindex               " + "Maintain a full transaction index (default: 0)" + "\n" +
+        "  -loadblock=<file>      " + "Imports blocks from external blk000??.dat file" + "\n" +
+        "  -reindex               " + "Rebuild block chain index from current blk000??.dat files" + "\n" +
+        "  -par=<n>               " + "Set the number of script verification threads (up to 16, 0 = auto, <0 = leave that many cores free, default: 0)" + "\n" +
 
-        "\n" + _("Block creation options:") + "\n" +
-        "  -blockminsize=<n>      "   + _("Set minimum block size in bytes (default: 0)") + "\n" +
-        "  -blockmaxsize=<n>      "   + _("Set maximum block size in bytes (default: 250000)") + "\n" +
-        "  -blockprioritysize=<n> "   + _("Set maximum size of high-priority/low-fee transactions in bytes (default: 27000)") + "\n" +
+        "\n" + "Block creation options:" + "\n" +
+        "  -blockminsize=<n>      "   + "Set minimum block size in bytes (default: 0)" + "\n" +
+        "  -blockmaxsize=<n>      "   + "Set maximum block size in bytes (default: 250000)" + "\n" +
+        "  -blockprioritysize=<n> "   + "Set maximum size of high-priority/low-fee transactions in bytes (default: 27000)" + "\n" +
 
-        "\n" + _("SSL options: (see the Bitcoin Wiki for SSL setup instructions)") + "\n" +
-        "  -rpcssl                                  " + _("Use OpenSSL (https) for JSON-RPC connections") + "\n" +
-        "  -rpcsslcertificatechainfile=<file.cert>  " + _("Server certificate file (default: server.cert)") + "\n" +
-        "  -rpcsslprivatekeyfile=<file.pem>         " + _("Server private key (default: server.pem)") + "\n" +
-        "  -rpcsslciphers=<ciphers>                 " + _("Acceptable ciphers (default: TLSv1+HIGH:!SSLv2:!aNULL:!eNULL:!AH:!3DES:@STRENGTH)") + "\n";
+        "\n" + "SSL options: (see the Bitcoin Wiki for SSL setup instructions)" + "\n" +
+        "  -rpcssl                                  " + "Use OpenSSL (https) for JSON-RPC connections" + "\n" +
+        "  -rpcsslcertificatechainfile=<file.cert>  " + "Server certificate file (default: server.cert)" + "\n" +
+        "  -rpcsslprivatekeyfile=<file.pem>         " + "Server private key (default: server.pem)" + "\n" +
+        "  -rpcsslciphers=<ciphers>                 " + "Acceptable ciphers (default: TLSv1+HIGH:!SSLv2:!aNULL:!eNULL:!AH:!3DES:@STRENGTH)" + "\n";
 
     return strUsage;
 }
@@ -414,7 +408,7 @@ bool AppInit2(boost::thread_group& threadGroup)
     nMaxConnections = std::max(std::min(nMaxConnections, (int)(FD_SETSIZE - nBind - MIN_CORE_FILEDESCRIPTORS)), 0);
     int nFD = RaiseFileDescriptorLimit(nMaxConnections + MIN_CORE_FILEDESCRIPTORS);
     if (nFD < MIN_CORE_FILEDESCRIPTORS)
-        return InitError(_("Not enough file descriptors available."));
+        return InitError("Not enough file descriptors available.");
     if (nFD - MIN_CORE_FILEDESCRIPTORS < nMaxConnections)
         nMaxConnections = nFD - MIN_CORE_FILEDESCRIPTORS;
 
@@ -477,9 +471,9 @@ bool AppInit2(boost::thread_group& threadGroup)
     if (mapArgs.count("-paytxfee"))
     {
         if (!ParseMoney(mapArgs["-paytxfee"], nTransactionFee) || nTransactionFee < PERKB_TX_FEE)
-            return InitError(strprintf(_("Invalid amount for -paytxfee=<amount>: '%s'"), mapArgs["-paytxfee"].c_str()));
+            return InitError(strprintf("Invalid amount for -paytxfee=<amount>: '%s'", mapArgs["-paytxfee"].c_str()));
         if (nTransactionFee > 0.25 * COIN)
-            InitWarning(_("Warning: -paytxfee is set very high! This is the transaction fee you will pay if you send a transaction."));
+            InitWarning("Warning: -paytxfee is set very high! This is the transaction fee you will pay if you send a transaction.");
     }
 
     // ********************************************************* Step 4: application initialization: dir lock, daemonize, pidfile, debug log
@@ -492,7 +486,7 @@ bool AppInit2(boost::thread_group& threadGroup)
     if (file) fclose(file);
     static boost::interprocess::file_lock lock(pathLockFile.string().c_str());
     if (!lock.try_lock())
-        return InitError(strprintf(_("Cannot obtain a lock on data directory %s. Peercoin is probably already running."), strDataDir.c_str()));
+        return InitError(strprintf("Cannot obtain a lock on data directory %s. Peercoin is probably already running.", strDataDir.c_str()));
 
     if (GetBoolArg("-shrinkdebugfile", !fDebug))
         ShrinkDebugFile();
@@ -519,7 +513,7 @@ bool AppInit2(boost::thread_group& threadGroup)
 
     // ********************************************************* Step 5: verify wallet database integrity
 
-    uiInterface.InitMessage(_("Verifying wallet..."));
+    uiInterface.InitMessage("Verifying wallet...");
 
     if (!bitdb.Open(GetDataDir()))
     {
@@ -536,7 +530,7 @@ bool AppInit2(boost::thread_group& threadGroup)
         // try again
         if (!bitdb.Open(GetDataDir())) {
             // if it still fails, it probably means we can't even create the database env
-            string msg = strprintf(_("Error initializing wallet database environment %s!"), strDataDir.c_str());
+            string msg = strprintf("Error initializing wallet database environment %s!", strDataDir.c_str());
             return InitError(msg);
         }
     }
@@ -553,28 +547,28 @@ bool AppInit2(boost::thread_group& threadGroup)
         CDBEnv::VerifyResult r = bitdb.Verify("wallet.dat", CWalletDB::Recover);
         if (r == CDBEnv::RECOVER_OK)
         {
-            string msg = strprintf(_("Warning: wallet.dat corrupt, data salvaged!"
+            string msg = strprintf("Warning: wallet.dat corrupt, data salvaged!"
                                      " Original wallet.dat saved as wallet.{timestamp}.bak in %s; if"
                                      " your balance or transactions are incorrect you should"
-                                     " restore from a backup."), strDataDir.c_str());
+                                     " restore from a backup.", strDataDir.c_str());
             InitWarning(msg);
         }
         if (r == CDBEnv::RECOVER_FAIL)
-            return InitError(_("wallet.dat corrupt, salvage failed"));
+            return InitError("wallet.dat corrupt, salvage failed");
     }
 
     // ********************************************************* Step 6: network initialization
 
     int nSocksVersion = GetArg("-socks", 5);
     if (nSocksVersion != 4 && nSocksVersion != 5)
-        return InitError(strprintf(_("Unknown -socks proxy version requested: %i"), nSocksVersion));
+        return InitError(strprintf("Unknown -socks proxy version requested: %i", nSocksVersion));
 
     if (mapArgs.count("-onlynet")) {
         std::set<enum Network> nets;
         BOOST_FOREACH(std::string snet, mapMultiArgs["-onlynet"]) {
             enum Network net = ParseNetwork(snet);
             if (net == NET_UNROUTABLE)
-                return InitError(strprintf(_("Unknown network specified in -onlynet: '%s'"), snet.c_str()));
+                return InitError(strprintf("Unknown network specified in -onlynet: '%s'", snet.c_str()));
             nets.insert(net);
         }
         for (int n = 0; n < NET_MAX; n++) {
@@ -595,7 +589,7 @@ bool AppInit2(boost::thread_group& threadGroup)
     if (mapArgs.count("-proxy")) {
         addrProxy = CService(mapArgs["-proxy"], 9050);
         if (!addrProxy.IsValid())
-            return InitError(strprintf(_("Invalid -proxy address: '%s'"), mapArgs["-proxy"].c_str()));
+            return InitError(strprintf("Invalid -proxy address: '%s'", mapArgs["-proxy"].c_str()));
 
         if (!IsLimited(NET_IPV4))
             SetProxy(NET_IPV4, addrProxy, nSocksVersion);
@@ -617,7 +611,7 @@ bool AppInit2(boost::thread_group& threadGroup)
         else
             addrOnion = CService(mapArgs["-tor"], 9050);
         if (!addrOnion.IsValid())
-            return InitError(strprintf(_("Invalid -tor address: '%s'"), mapArgs["-tor"].c_str()));
+            return InitError(strprintf("Invalid -tor address: '%s'", mapArgs["-tor"].c_str()));
         SetProxy(NET_TOR, addrOnion, 5);
         SetReachable(NET_TOR);
     }
@@ -633,7 +627,7 @@ bool AppInit2(boost::thread_group& threadGroup)
             BOOST_FOREACH(std::string strBind, mapMultiArgs["-bind"]) {
                 CService addrBind;
                 if (!Lookup(strBind.c_str(), addrBind, GetListenPort(), false))
-                    return InitError(strprintf(_("Cannot resolve -bind address: '%s'"), strBind.c_str()));
+                    return InitError(strprintf("Cannot resolve -bind address: '%s'", strBind.c_str()));
                 fBound |= Bind(addrBind, (BF_EXPLICIT | BF_REPORT_ERROR));
             }
         }
@@ -646,14 +640,14 @@ bool AppInit2(boost::thread_group& threadGroup)
             fBound |= Bind(CService(inaddr_any, GetListenPort()), !fBound ? BF_REPORT_ERROR : BF_NONE);
         }
         if (!fBound)
-            return InitError(_("Failed to listen on any port. Use -listen=0 if you want this."));
+            return InitError("Failed to listen on any port. Use -listen=0 if you want this.");
     }
 
     if (mapArgs.count("-externalip")) {
         BOOST_FOREACH(string strAddr, mapMultiArgs["-externalip"]) {
             CService addrLocal(strAddr, GetListenPort(), fNameLookup);
             if (!addrLocal.IsValid())
-                return InitError(strprintf(_("Cannot resolve -externalip address: '%s'"), strAddr.c_str()));
+                return InitError(strprintf("Cannot resolve -externalip address: '%s'", strAddr.c_str()));
             AddLocal(CService(strAddr, GetListenPort(), fNameLookup), LOCAL_MANUAL);
         }
     }
@@ -709,7 +703,7 @@ bool AppInit2(boost::thread_group& threadGroup)
         bool fReset = fReindex;
         std::string strLoadError;
 
-        uiInterface.InitMessage(_("Loading block index..."));
+        uiInterface.InitMessage("Loading block index...");
 
         nStart = GetTimeMillis();
         do {
@@ -727,23 +721,23 @@ bool AppInit2(boost::thread_group& threadGroup)
                     pblocktree->WriteReindexing(true);
 
                 if (!LoadBlockIndex()) {
-                    strLoadError = _("Error loading block database");
+                    strLoadError = "Error loading block database";
                     break;
                 }
 
                 // Initialize the block index (no-op if non-empty database was already loaded)
                 if (!InitBlockIndex()) {
-                    strLoadError = _("Error initializing block database");
+                    strLoadError = "Error initializing block database";
                     break;
                 }
 
-                uiInterface.InitMessage(_("Verifying blocks..."));
+                uiInterface.InitMessage("Verifying blocks...");
                 if (!VerifyDB()) {
-                    strLoadError = _("Corrupted block database detected");
+                    strLoadError = "Corrupted block database detected";
                     break;
                 }
             } catch(std::exception &e) {
-                strLoadError = _("Error opening block database");
+                strLoadError = "Error opening block database";
                 break;
             }
 
@@ -754,7 +748,7 @@ bool AppInit2(boost::thread_group& threadGroup)
             // first suggest a reindex
             if (!fReset) {
                 bool fRet = uiInterface.ThreadSafeMessageBox(
-                    strLoadError + ".\n" + _("Do you want to rebuild the block database now?"),
+                    strLoadError + ".\n" + "Do you want to rebuild the block database now?",
                     "", CClientUIInterface::MSG_ERROR | CClientUIInterface::BTN_ABORT);
                 if (fRet) {
                     fReindex = true;
@@ -769,7 +763,7 @@ bool AppInit2(boost::thread_group& threadGroup)
     }
 
     if (mapArgs.count("-txindex") && fTxIndex != GetBoolArg("-txindex", false))
-        return InitError(_("You need to rebuild the databases using -reindex to change -txindex"));
+        return InitError("You need to rebuild the databases using -reindex to change -txindex");
 
     // as LoadBlockIndex can take several minutes, it's possible the user
     // requested to kill bitcoin-qt during the last operation. If so, exit.
@@ -812,12 +806,12 @@ bool AppInit2(boost::thread_group& threadGroup)
 
     // ********************************************************* Step 8: load wallet
     if (GetBoolArg("-zapwallettxes", false)) {
-        uiInterface.InitMessage(_("Zapping all transactions from wallet..."));
+        uiInterface.InitMessage("Zapping all transactions from wallet...");
 
         pwalletMain = new CWallet("wallet.dat");
         DBErrors nZapWalletRet = pwalletMain->ZapWalletTx();
         if (nZapWalletRet != DB_LOAD_OK) {
-            uiInterface.InitMessage(_("Error loading wallet.dat: Wallet corrupted"));
+            uiInterface.InitMessage("Error loading wallet.dat: Wallet corrupted");
             return false;
         }
 
@@ -825,7 +819,7 @@ bool AppInit2(boost::thread_group& threadGroup)
         pwalletMain = NULL;
     }
 
-    uiInterface.InitMessage(_("Loading wallet..."));
+    uiInterface.InitMessage("Loading wallet...");
 
     nStart = GetTimeMillis();
     bool fFirstRun = true;
@@ -834,23 +828,23 @@ bool AppInit2(boost::thread_group& threadGroup)
     if (nLoadWalletRet != DB_LOAD_OK)
     {
         if (nLoadWalletRet == DB_CORRUPT)
-            strErrors << _("Error loading wallet.dat: Wallet corrupted") << "\n";
+            strErrors << "Error loading wallet.dat: Wallet corrupted" << "\n";
         else if (nLoadWalletRet == DB_NONCRITICAL_ERROR)
         {
-            string msg(_("Warning: error reading wallet.dat! All keys read correctly, but transaction data"
-                         " or address book entries might be missing or incorrect."));
+            string msg("Warning: error reading wallet.dat! All keys read correctly, but transaction data"
+                         " or address book entries might be missing or incorrect.");
             InitWarning(msg);
         }
         else if (nLoadWalletRet == DB_TOO_NEW)
-            strErrors << _("Error loading wallet.dat: Wallet requires newer version of Peercoin") << "\n";
+            strErrors << "Error loading wallet.dat: Wallet requires newer version of Peercoin" << "\n";
         else if (nLoadWalletRet == DB_NEED_REWRITE)
         {
-            strErrors << _("Wallet needed to be rewritten: restart Peercoin to complete") << "\n";
+            strErrors << "Wallet needed to be rewritten: restart Peercoin to complete" << "\n";
             printf("%s", strErrors.str().c_str());
             return InitError(strErrors.str());
         }
         else
-            strErrors << _("Error loading wallet.dat") << "\n";
+            strErrors << "Error loading wallet.dat" << "\n";
     }
 
     if (GetBoolArg("-upgradewallet", fFirstRun))
@@ -865,7 +859,7 @@ bool AppInit2(boost::thread_group& threadGroup)
         else
             printf("Allowing wallet upgrade up to %i\n", nMaxVersion);
         if (nMaxVersion < pwalletMain->GetVersion())
-            strErrors << _("Cannot downgrade wallet") << "\n";
+            strErrors << "Cannot downgrade wallet" << "\n";
         pwalletMain->SetMaxVersion(nMaxVersion);
     }
 
@@ -878,7 +872,7 @@ bool AppInit2(boost::thread_group& threadGroup)
         if (pwalletMain->GetKeyFromPool(newDefaultKey, false)) {
             pwalletMain->SetDefaultKey(newDefaultKey);
             if (!pwalletMain->SetAddressBookName(pwalletMain->vchDefaultKey.GetID(), ""))
-                strErrors << _("Cannot write default address") << "\n";
+                strErrors << "Cannot write default address" << "\n";
         }
 
         pwalletMain->SetBestChain(CBlockLocator(pindexBest));
@@ -903,7 +897,7 @@ bool AppInit2(boost::thread_group& threadGroup)
     }
     if (pindexBest && pindexBest != pindexRescan && pindexRescan && pindexBest->nHeight > pindexRescan->nHeight)
     {
-        uiInterface.InitMessage(_("Rescanning..."));
+        uiInterface.InitMessage("Rescanning...");
         printf("Rescanning last %i blocks (from block %i)...\n", pindexBest->nHeight - pindexRescan->nHeight, pindexRescan->nHeight);
         nStart = GetTimeMillis();
         pwalletMain->ScanForWalletTransactions(pindexRescan, true);
@@ -929,7 +923,7 @@ bool AppInit2(boost::thread_group& threadGroup)
 
     // ********************************************************* Step 10: load peers
 
-    uiInterface.InitMessage(_("Loading addresses..."));
+    uiInterface.InitMessage("Loading addresses...");
 
     nStart = GetTimeMillis();
 
@@ -981,7 +975,7 @@ bool AppInit2(boost::thread_group& threadGroup)
 
     // ********************************************************* Step 12: finished
 
-    uiInterface.InitMessage(_("Done loading"));
+    uiInterface.InitMessage("Done loading");
 
      // Add wallet transactions that aren't already in a block to mapTransactions
     pwalletMain->ReacceptWalletTransactions();

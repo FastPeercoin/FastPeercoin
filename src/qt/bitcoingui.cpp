@@ -11,11 +11,9 @@
 #include "bitcoingui.h"
 
 #include "transactiontablemodel.h"
-#include "optionsdialog.h"
 #include "clientmodel.h"
 #include "walletmodel.h"
 #include "walletframe.h"
-#include "optionsmodel.h"
 #include "transactiondescdialog.h"
 #include "bitcoinunits.h"
 #include "guiconstants.h"
@@ -29,7 +27,6 @@
 #include "macdockiconhandler.h"
 #endif
 
-#include <QMenuBar>
 #include <QMenu>
 #include <QIcon>
 #include <QVBoxLayout>
@@ -89,9 +86,6 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     // Create actions for the toolbar, menu bar
     // Needs walletFrame to be initialized
     createActions();
-
-    // Create application menu bar
-    createMenuBar();
 
     // Create the toolbars
     createToolBars();
@@ -170,37 +164,11 @@ void BitcoinGUI::createActions()
     addressBookAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_6));
     tabGroup->addAction(addressBookAction);
 
-    connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
-    connect(overviewAction, SIGNAL(triggered()), this, SLOT(gotoOverviewPage()));
-    connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
-    connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(gotoSendCoinsPage()));
-    connect(receiveCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
-    connect(receiveCoinsAction, SIGNAL(triggered()), this, SLOT(gotoReceiveCoinsPage()));
-    connect(historyAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
-    connect(historyAction, SIGNAL(triggered()), this, SLOT(gotoHistoryPage()));
-    connect(addressBookAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
-    connect(addressBookAction, SIGNAL(triggered()), this, SLOT(gotoAddressBookPage()));
-
-    optionsAction = new QAction(QIcon(":/icons/options"), tr("&Options..."), this);
-    optionsAction->setStatusTip(tr("Modify configuration options for Peercoin"));
-    optionsAction->setMenuRole(QAction::PreferencesRole);
-
-    connect(optionsAction, SIGNAL(triggered()), this, SLOT(optionsClicked()));
-}
-
-void BitcoinGUI::createMenuBar()
-{
-#ifdef Q_OS_MAC
-    // Create a decoupled menu bar on Mac which stays even if the window is closed
-    appMenuBar = new QMenuBar();
-#else
-    // Get the main window's menu bar on other platforms
-    appMenuBar = menuBar();
-#endif
-
-    // Configure the menus
-    QMenu *settings = appMenuBar->addMenu(tr("&Settings"));
-    settings->addAction(optionsAction);
+    connect(overviewAction, SIGNAL(triggered()), SLOT(gotoOverviewPage()));
+    connect(sendCoinsAction, SIGNAL(triggered()), SLOT(gotoSendCoinsPage()));
+    connect(receiveCoinsAction, SIGNAL(triggered()), SLOT(gotoReceiveCoinsPage()));
+    connect(historyAction, SIGNAL(triggered()), SLOT(gotoHistoryPage()));
+    connect(addressBookAction, SIGNAL(triggered()), SLOT(gotoAddressBookPage()));
 }
 
 void BitcoinGUI::createToolBars()
@@ -273,15 +241,6 @@ void BitcoinGUI::restoreWindowGeometry()
     }
     resize(size);
     move(pos);
-}
-
-void BitcoinGUI::optionsClicked()
-{
-    if(!clientModel || !clientModel->getOptionsModel())
-        return;
-    OptionsDialog dlg(this);
-    dlg.setModel(clientModel->getOptionsModel());
-    dlg.exec();
 }
 
 void BitcoinGUI::gotoOverviewPage()
@@ -515,33 +474,6 @@ void BitcoinGUI::handleURI(QString strURI)
     if (!walletFrame->handleURI(strURI))
         message(tr("URI handling"), tr("URI can not be parsed! This can be caused by an invalid Peercoin address or malformed URI parameters."),
                   CClientUIInterface::ICON_WARNING);
-}
-
-void BitcoinGUI::showNormalIfMinimized(bool fToggleHidden)
-{
-    // activateWindow() (sometimes) helps with keyboard focus on Windows
-    if (isHidden())
-    {
-        show();
-        activateWindow();
-    }
-    else if (isMinimized())
-    {
-        showNormal();
-        activateWindow();
-    }
-    else if (GUIUtil::isObscured(this))
-    {
-        raise();
-        activateWindow();
-    }
-    else if(fToggleHidden)
-        hide();
-}
-
-void BitcoinGUI::toggleHidden()
-{
-    showNormalIfMinimized(true);
 }
 
 void BitcoinGUI::detectShutdown()

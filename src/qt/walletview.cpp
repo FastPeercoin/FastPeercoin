@@ -11,7 +11,6 @@
 #include "sendcoinsdialog.h"
 #include "clientmodel.h"
 #include "walletmodel.h"
-#include "optionsmodel.h"
 #include "transactionview.h"
 #include "overviewpage.h"
 #include "ui_interface.h"
@@ -81,8 +80,6 @@ void WalletView::setClientModel(ClientModel *clientModel)
     if (clientModel)
     {
         overviewPage->setClientModel(clientModel);
-        addressBookPage->setOptionsModel(clientModel->getOptionsModel());
-        receiveCoinsPage->setOptionsModel(clientModel->getOptionsModel());
     }
 }
 
@@ -162,7 +159,6 @@ bool WalletView::handleURI(const QString& strURI)
     if (sendCoinsPage->handleURI(strURI))
     {
         gotoSendCoinsPage();
-        emit showNormalIfMinimized();
         return true;
     }
     else

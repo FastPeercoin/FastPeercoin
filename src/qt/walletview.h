@@ -81,10 +81,6 @@ public slots:
         The new items are those between start and end inclusive, under the given parent item.
     */
     void incomingTransaction(const QModelIndex& parent, int start, int /*end*/);
-
-signals:
-    /** Signal that we want to show the main window */
-    void showNormalIfMinimized();
 };
 
 #endif // WALLETVIEW_H

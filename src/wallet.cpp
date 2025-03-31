@@ -1021,14 +1021,14 @@ bool CWallet::CreateTransaction(const vector<pair<CScript, int64> >& vecSend,
     {
         if (nValue < 0)
         {
-            strFailReason = _("Transaction amounts must be positive");
+            strFailReason = "Transaction amounts must be positive";
             return false;
         }
         nValue += s.second;
     }
     if (vecSend.empty() || nValue < 0)
     {
-        strFailReason = _("Transaction amounts must be positive");
+        strFailReason = "Transaction amounts must be positive";
         return false;
     }
 
@@ -1053,7 +1053,7 @@ bool CWallet::CreateTransaction(const vector<pair<CScript, int64> >& vecSend,
                     CTxOut txout(s.second, s.first);
                     if (txout.IsDust())
                     {
-                        strFailReason = _("Transaction amount too small");
+                        strFailReason = "Transaction amount too small";
                         return false;
                     }
                     wtxNew.vout.push_back(txout);
@@ -1064,7 +1064,7 @@ bool CWallet::CreateTransaction(const vector<pair<CScript, int64> >& vecSend,
                 int64 nValueIn = 0;
                 if (!SelectCoins(nTotalValue, wtxNew.nTime, setCoins, nValueIn))
                 {
-                    strFailReason = _("Insufficient funds");
+                    strFailReason = "Insufficient funds";
                     return false;
                 }
                 CScript scriptChange;
@@ -1147,7 +1147,7 @@ bool CWallet::CreateTransaction(const vector<pair<CScript, int64> >& vecSend,
                 BOOST_FOREACH(const PAIRTYPE(const CWalletTx*,unsigned int)& coin, setCoins)
                     if (!SignSignature(*this, *coin.first, wtxNew, nIn++))
                     {
-                        strFailReason = _("Signing transaction failed");
+                        strFailReason = "Signing transaction failed";
                         return false;
                     }
 
@@ -1155,7 +1155,7 @@ bool CWallet::CreateTransaction(const vector<pair<CScript, int64> >& vecSend,
                 unsigned int nBytes = ::GetSerializeSize(*(CTransaction*)&wtxNew, SER_NETWORK, PROTOCOL_VERSION);
                 if (nBytes >= MAX_STANDARD_TX_SIZE)
                 {
-                    strFailReason = _("Transaction too large");
+                    strFailReason = "Transaction too large";
                     return false;
                 }
                 dPriority /= nBytes;
@@ -1461,7 +1461,7 @@ string CWallet::SendMoney(CScript scriptPubKey, int64 nValue, CWalletTx& wtxNew,
     if (!CreateTransaction(scriptPubKey, nValue, wtxNew, reservekey, nFeeRequired, strError))
     {
         if (nValue + nFeeRequired > GetBalance())
-            strError = strprintf(_("Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds!"), FormatMoney(nFeeRequired).c_str());
+            strError = strprintf("Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds!", FormatMoney(nFeeRequired).c_str());
         printf("SendMoney() : %s\n", strError.c_str());
         return strError;
     }
@@ -1470,7 +1470,7 @@ string CWallet::SendMoney(CScript scriptPubKey, int64 nValue, CWalletTx& wtxNew,
         return "ABORTED";
 
     if (!CommitTransaction(wtxNew, reservekey))
-        return _("Error: The transaction was rejected! This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.");
+        return "Error: The transaction was rejected! This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.";
 
     return "";
 }
@@ -1481,9 +1481,9 @@ string CWallet::SendMoneyToDestination(const CTxDestination& address, int64 nVal
 {
     // Check amount
     if (nValue <= 0)
-        return _("Invalid amount");
+        return "Invalid amount";
     if (nValue + nTransactionFee > GetBalance())
-        return _("Insufficient funds");
+        return "Insufficient funds";
 
     // Parse Bitcoin address
     CScript scriptPubKey;

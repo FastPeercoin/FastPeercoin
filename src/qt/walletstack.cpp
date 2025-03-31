@@ -38,9 +38,6 @@ bool WalletStack::addWallet(const QString& name, WalletModel *walletModel)
     addWidget(walletView);
     mapWalletViews[name] = walletView;
 
-    // Ensure a walletView is able to show the main window
-	connect(walletView, SIGNAL(showNormalIfMinimized()), gui, SLOT(showNormalIfMinimized()));
-
     return true;
 }
 

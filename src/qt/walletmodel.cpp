@@ -1,6 +1,5 @@
 #include "walletmodel.h"
 #include "guiconstants.h"
-#include "optionsmodel.h"
 #include "addresstablemodel.h"
 #include "transactiontablemodel.h"
 
@@ -12,8 +11,8 @@
 #include <QSet>
 #include <QTimer>
 
-WalletModel::WalletModel(CWallet *wallet, OptionsModel *optionsModel, QObject *parent) :
-    QObject(parent), wallet(wallet), optionsModel(optionsModel), addressTableModel(0),
+WalletModel::WalletModel(CWallet *wallet, QObject *parent) :
+    QObject(parent), wallet(wallet), addressTableModel(0),
     transactionTableModel(0),
     cachedBalance(0), cachedStake(0), 
     cachedUnconfirmedBalance(0), cachedImmatureBalance(0),
@@ -227,11 +226,6 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(const QList<SendCoinsRecipie
     }
 
     return SendCoinsReturn(OK, 0, hex);
-}
-
-OptionsModel *WalletModel::getOptionsModel()
-{
-    return optionsModel;
 }
 
 AddressTableModel *WalletModel::getAddressTableModel()

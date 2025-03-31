@@ -9,7 +9,6 @@ noinst_LIBRARIES += qt/libpeercoinqt.a
 QT_FORMS_UI = \
   qt/forms/addressbookpage.ui \
   qt/forms/editaddressdialog.ui \
-  qt/forms/optionsdialog.ui \
   qt/forms/overviewpage.ui \
   qt/forms/sendcoinsdialog.ui \
   qt/forms/sendcoinsentry.ui \
@@ -27,8 +26,6 @@ QT_MOC_CPP = \
   qt/moc_guiutil.cpp \
   qt/moc_monitoreddatamapper.cpp \
   qt/moc_notificator.cpp \
-  qt/moc_optionsdialog.cpp \
-  qt/moc_optionsmodel.cpp \
   qt/moc_overviewpage.cpp \
   qt/moc_paymentserver.cpp \
   qt/moc_qvalidatedlineedit.cpp \
@@ -66,8 +63,6 @@ PEERCOIN_QT_H = \
   qt/guiutil.h \
   qt/monitoreddatamapper.h \
   qt/notificator.h \
-  qt/optionsdialog.h \
-  qt/optionsmodel.h \
   qt/overviewpage.h \
   qt/paymentserver.h \
   qt/qvalidatedlineedit.h \
@@ -135,8 +130,6 @@ PEERCOIN_QT_CPP = \
   qt/guiutil.cpp \
   qt/monitoreddatamapper.cpp \
   qt/notificator.cpp \
-  qt/optionsdialog.cpp \
-  qt/optionsmodel.cpp \
   qt/qvalidatedlineedit.cpp \
   qt/qvaluecombobox.cpp \
   qt/splashscreen.cpp 

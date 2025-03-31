@@ -5,7 +5,6 @@
 #include "guiconstants.h"
 #include "transactiondesc.h"
 #include "walletmodel.h"
-#include "optionsmodel.h"
 #include "addresstablemodel.h"
 #include "bitcoinunits.h"
 

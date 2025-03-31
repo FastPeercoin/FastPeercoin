@@ -8,7 +8,6 @@
 #include "bitcoingui.h"
 #include "clientmodel.h"
 #include "walletmodel.h"
-#include "optionsmodel.h"
 #include "guiutil.h"
 #include "guiconstants.h"
 #include "init.h"
@@ -90,20 +89,9 @@ static bool ThreadSafeAskFee(int64 nFeeRequired)
 
 static void InitMessage(const std::string &message)
 {
-    if(splashref)
-    {
-        splashref->showMessage(QString::fromStdString(message), Qt::AlignBottom|Qt::AlignHCenter, QColor(55,55,55));
-        qApp->processEvents();
-    }
+    splashref->showMessage(QString::fromStdString(message), Qt::AlignBottom|Qt::AlignHCenter, QColor(55,55,55));
+    qApp->processEvents();
     printf("init message: %s\n", message.c_str());
-}
-
-/*
-   Translate string to current locale using Qt.
- */
-static std::string Translate(const char* psz)
-{
-    return QCoreApplication::translate("bitcoin-core", psz).toStdString();
 }
 
 /* Handle runaway exceptions. Shows a message box with the problem and quits the program.
@@ -153,47 +141,15 @@ int main(int argc, char *argv[])
     }
     ReadConfigFile(mapArgs, mapMultiArgs);
 
-    // Application identification (must be set before OptionsModel is initialized,
-    // as it is used to locate QSettings)
+    // Application identification
     QApplication::setOrganizationName("Peercoin");
     QApplication::setOrganizationDomain("peercoin.net");
     QApplication::setApplicationName("Peercoin");
-
-    // ... then GUI settings:
-    OptionsModel optionsModel;
-
-    // Get desired locale (e.g. "de_DE") from command line or use system locale
-    QString lang_territory = QString::fromStdString(GetArg("-lang", QLocale::system().name().toStdString()));
-    QString lang = lang_territory;
-    // Convert to "de" only by truncating "_DE"
-    lang.truncate(lang_territory.lastIndexOf('_'));
-
-    QTranslator qtTranslatorBase, qtTranslator, translatorBase, translator;
-    // Load language files for configured locale:
-    // - First load the translator for the base language, without territory
-    // - Then load the more specific locale translator
-
-    // Load e.g. qt_de.qm
-    if (qtTranslatorBase.load("qt_" + lang, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
-        app.installTranslator(&qtTranslatorBase);
-
-    // Load e.g. qt_de_DE.qm
-    if (qtTranslator.load("qt_" + lang_territory, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
-        app.installTranslator(&qtTranslator);
-
-    // Load e.g. bitcoin_de.qm (shortcut "de" needs to be defined in bitcoin.qrc)
-    if (translatorBase.load(lang, ":/translations/"))
-        app.installTranslator(&translatorBase);
-
-    // Load e.g. bitcoin_de_DE.qm (shortcut "de_DE" needs to be defined in bitcoin.qrc)
-    if (translator.load(lang_territory, ":/translations/"))
-        app.installTranslator(&translator);
 
     // Subscribe to global signals from core
     uiInterface.ThreadSafeMessageBox.connect(ThreadSafeMessageBox);
     uiInterface.ThreadSafeAskFee.connect(ThreadSafeAskFee);
     uiInterface.InitMessage.connect(InitMessage);
-    uiInterface.Translate.connect(Translate);
 
     // Show help message immediately after parsing command-line options (for "-lang") and setting locale,
     // but before showing splash screen.
@@ -205,12 +161,9 @@ int main(int argc, char *argv[])
     }
 
     SplashScreen splash(QPixmap(), 0);
-    if (GetBoolArg("-splash", true) && !GetBoolArg("-min"))
-    {
-        splash.show();
-        splash.setAutoFillBackground(true);
-        splashref = &splash;
-    }
+    splash.show();
+    splash.setAutoFillBackground(true);
+    splashref = &splash;
 
     app.processEvents();
     app.setQuitOnLastWindowClosed(false);
@@ -232,25 +185,17 @@ int main(int argc, char *argv[])
                 // Put this in a block, so that the Model objects are cleaned up before
                 // calling Shutdown().
 
-                if (splashref)
-                    splash.finish(&window);
+                splash.finish(&window);
 
-                ClientModel clientModel(&optionsModel);
-                WalletModel walletModel(pwalletMain, &optionsModel);
+                ClientModel clientModel;
+                WalletModel walletModel(pwalletMain);
 
                 window.setClientModel(&clientModel);
+
                 window.addWallet("~Default", &walletModel);
                 window.setCurrentWallet("~Default");
 
-                // If -min option passed, start window minimized.
-                if(GetBoolArg("-min"))
-                {
-                    window.showMinimized();
-                }
-                else
-                {
-                    window.show();
-                }
+                window.show();
 
                 // Now that initialization/startup is done, process any command-line
                 // bitcoin: URIs

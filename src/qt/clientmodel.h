@@ -3,7 +3,6 @@
 
 #include <QObject>
 
-class OptionsModel;
 class AddressTableModel;
 class TransactionTableModel;
 class CWallet;
@@ -26,10 +25,8 @@ class ClientModel : public QObject
     Q_OBJECT
 
 public:
-    explicit ClientModel(OptionsModel *optionsModel, QObject *parent = 0);
+    explicit ClientModel(QObject *parent = 0);
     ~ClientModel();
-
-    OptionsModel *getOptionsModel();
 
     int getNumConnections() const;
     int getNumBlocks() const;
@@ -50,8 +47,6 @@ public:
     QString formatClientStartupTime() const;
 
 private:
-    OptionsModel *optionsModel;
-
     int cachedNumBlocks;
     int cachedNumBlocksOfPeers;
 	bool cachedReindexing;

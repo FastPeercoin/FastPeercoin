@@ -147,15 +147,6 @@ private slots:
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */
     void gotoSendCoinsPage(QString addr = "");
-
-    /** Show configuration dialog */
-    void optionsClicked();
-
-    /** Show window if hidden, unminimize when minimized, rise when obscured or show if hidden and fToggleHidden is true */
-    void showNormalIfMinimized(bool fToggleHidden = false);
-    /** Simply calls showNormalIfMinimized(true) for use in SLOT() macro */
-    void toggleHidden();
-
     /** called by a timer to check if fRequestShutdown has been set **/
     void detectShutdown();
 };

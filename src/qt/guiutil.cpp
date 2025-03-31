@@ -289,18 +289,14 @@ bool ToolTipToRichTextFilter::eventFilter(QObject *obj, QEvent *evt)
 HelpMessageBox::HelpMessageBox(QWidget *parent) :
     QMessageBox(parent)
 {
-    header = tr("Peercoin-Qt") + " " + tr("version") + " " +
+    header = tr("FastPeercoin-qt") + " " + tr("version") + " " +
         QString::fromStdString(FormatFullVersion()) + "\n\n" +
         tr("Usage:") + "\n" +
-        "  peercoin-qt [" + tr("command-line options") + "]                     " + "\n";
+        "  FastPeercoin-qt [" + tr("command-line options") + "]                     " + "\n";
 
     coreOptions = QString::fromStdString(HelpMessage(HMM_BITCOIN_QT));
 
-    uiOptions = tr("UI options") + ":\n" +
-        "  -min                   " + tr("Start minimized") + "\n" +
-        "  -splash                " + tr("Show splash screen on startup (default: 1)") + "\n";
-
-    setWindowTitle(tr("Peercoin-Qt"));
+    setWindowTitle(tr("FastPeercoin-qt"));
     setTextFormat(Qt::PlainText);
     // setMinimumWidth is ignored for QMessageBox so put in non-breaking spaces to make it wider.
     setText(header + QString(QChar(0x2003)).repeated(50));

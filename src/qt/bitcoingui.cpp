@@ -181,15 +181,10 @@ void BitcoinGUI::createActions()
     connect(addressBookAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(addressBookAction, SIGNAL(triggered()), this, SLOT(gotoAddressBookPage()));
 
-    quitAction = new QAction(QIcon(":/icons/quit"), tr("E&xit"), this);
-    quitAction->setStatusTip(tr("Quit application"));
-    quitAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
-    quitAction->setMenuRole(QAction::QuitRole);
     optionsAction = new QAction(QIcon(":/icons/options"), tr("&Options..."), this);
     optionsAction->setStatusTip(tr("Modify configuration options for Peercoin"));
     optionsAction->setMenuRole(QAction::PreferencesRole);
 
-    connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     connect(optionsAction, SIGNAL(triggered()), this, SLOT(optionsClicked()));
 }
 
@@ -204,9 +199,6 @@ void BitcoinGUI::createMenuBar()
 #endif
 
     // Configure the menus
-    QMenu *file = appMenuBar->addMenu(tr("&File"));
-    file->addAction(quitAction);
-
     QMenu *settings = appMenuBar->addMenu(tr("&Settings"));
     settings->addAction(optionsAction);
 }
@@ -334,7 +326,7 @@ void BitcoinGUI::setNumConnections(int count)
 
 void BitcoinGUI::setNumBlocks(int count, int nTotalBlocks)
 {
-    // Prevent orphan statusbar messages (e.g. hover Quit in main menu, wait until chain-sync starts -> garbelled text)
+    // Prevent orphan statusbar messages.
     statusBar()->clearMessage();
 
     QString tooltip;

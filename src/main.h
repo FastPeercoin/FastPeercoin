@@ -11,6 +11,7 @@
 #endif
 
 #include "bignum.h"
+#include "diskblockpos.h"
 #include "sync.h"
 #include "net.h"
 #include "outpoint.h"
@@ -131,7 +132,6 @@ static const uint64 nMinDiskSpace = 52428800;
 class CReserveKey;
 class CCoinsDB;
 class CBlockTreeDB;
-struct CDiskBlockPos;
 class CCoins;
 class CTxUndo;
 class CCoinsView;
@@ -219,45 +219,7 @@ bool AbortNode(const std::string &msg);
 
 double GetBlockDifficulty(const CBlockIndex* blockindex = NULL);
 
-
-
-
-
-
-
-
 bool GetWalletFile(CWallet* pwallet, std::string &strWalletFileOut);
-
-struct CDiskBlockPos
-{
-    int nFile;
-    unsigned int nPos;
-
-    IMPLEMENT_SERIALIZE(
-        READWRITE(VARINT(nFile));
-        READWRITE(VARINT(nPos));
-    )
-
-    CDiskBlockPos() {
-        SetNull();
-    }
-
-    CDiskBlockPos(int nFileIn, unsigned int nPosIn) {
-        nFile = nFileIn;
-        nPos = nPosIn;
-    }
-
-    friend bool operator==(const CDiskBlockPos &a, const CDiskBlockPos &b) {
-        return (a.nFile == b.nFile && a.nPos == b.nPos);
-    }
-
-    friend bool operator!=(const CDiskBlockPos &a, const CDiskBlockPos &b) {
-        return !(a == b);
-    }
-
-    void SetNull() { nFile = -1; nPos = 0; }
-    bool IsNull() const { return (nFile == -1); }
-};
 
 struct CDiskTxPos : public CDiskBlockPos
 {

@@ -4,7 +4,7 @@ SUBDIRS = src
 
 GZIP_ENV="-9n"
 
-BITCOIN_QT_BIN=$(top_builddir)/src/qt/peercoin-qt$(EXEEXT)
+BITCOIN_QT_BIN=$(top_builddir)/src/qt/FastPeercoin-qt$(EXEEXT)
 
 COVERAGE_INFO = baseline_filtered_combined.info baseline.info block_test.info \
   leveldb_baseline.info test_bitcoin_filtered.info total_coverage.info \
@@ -24,7 +24,7 @@ distcleancheck:
 	@:
 
 $(BITCOIN_QT_BIN):
-	make -C $(top_srcdir)/src/qt peercoin-qt$(EXEEXT)
+	make -C $(top_srcdir)/src/qt FastPeercoin-qt$(EXEEXT)
 
 if USE_LCOV
 

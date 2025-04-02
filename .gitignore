@@ -61,17 +61,9 @@ src/qt/forms/ui_*.h
 # Compilation and Qt preprocessor part
 *.qm
 Makefile
-ppcoin-qt
-peercoin-qt
-PPCoin-Qt.app
-Peercoin-Qt.app
+FastPeercoin-qt
 .qmake.stash
 peercoin-qt_plugin_import.cpp
-
-# Unit-tests
-Makefile.test
-ppcoin-qt_test
-peercoin-qt_test
 
 # Resources cpp
 qrc_*.cpp
@@ -96,7 +88,6 @@ linux-build
 win32-build
 
 !src/leveldb-*/Makefile
-peercoin-qt
 
 #db4/
 db4/

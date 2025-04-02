@@ -6,9 +6,7 @@ It's Peercoin, but block times are sped way up.
 
 FastPeercoin aims to simplify the code as much as possible.
 
-It's new and shiny and you can get in on the ground floor!
-
-CPU mining still readily available (while supplies last).
+It's a payment system first and foremost.
 
 ### Building and running
 
@@ -48,10 +46,14 @@ git checkout FastPeercoin
 make
 ```
 
-6. Mine
+6. Run
 
 ```
-./src/qt/peercoin-qt -gen 1
+./src/qt/FastPeercoin-qt
 ```
 
-7. Profit!?!
+7. What happened to mining?
+
+CPU mining was possible for the first couple of weeks of the FastPeercoin project but has evolved to using ASIC devices.
+
+If you'd like to mine, have a look at the Docker/command-line project FastPeercoind: https://github.com/FastPeercoin/FastPeercoind

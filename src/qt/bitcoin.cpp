@@ -142,9 +142,9 @@ int main(int argc, char *argv[])
     ReadConfigFile(mapArgs, mapMultiArgs);
 
     // Application identification
-    QApplication::setOrganizationName("Peercoin");
-    QApplication::setOrganizationDomain("peercoin.net");
-    QApplication::setApplicationName("Peercoin");
+    QApplication::setOrganizationName("FastPeercoin");
+    QApplication::setOrganizationDomain("fastpeercoin.com");
+    QApplication::setApplicationName("FastPeercoin-qt");
 
     // Subscribe to global signals from core
     uiInterface.ThreadSafeMessageBox.connect(ThreadSafeMessageBox);

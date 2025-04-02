@@ -39,7 +39,7 @@
             <item>
              <widget class="QLabel" name="labelWalletStatus">
               <property name="toolTip">
-               <string>The displayed information may be out of date. Your wallet automatically synchronizes with the Peercoin network after a connection is established, but this process has not completed yet.</string>
+               <string>The displayed information may be out of date. Your wallet automatically synchronizes with the FastPeercoin network after a connection is established, but this process has not completed yet.</string>
               </property>
               <property name="text">
                <string notr="true">(out of sync)</string>
@@ -284,7 +284,7 @@
             <item>
              <widget class="QLabel" name="labelTransactionsStatus">
               <property name="toolTip">
-               <string>The displayed information may be out of date. Your wallet automatically synchronizes with the Peercoin network after a connection is established, but this process has not completed yet.</string>
+               <string>The displayed information may be out of date. Your wallet automatically synchronizes with the FastPeercoin network after a connection is established, but this process has not completed yet.</string>
               </property>
               <property name="text">
                <string notr="true">(out of sync)</string>

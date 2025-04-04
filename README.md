@@ -10,11 +10,11 @@ It's a payment system first and foremost.
 
 ### Building and running
 
-1. Use VirtualBox and Ubuntu 14.04 (Trusty Tahr)
+1. Use VirtualBox and Ubuntu 24.04 (Noble Numbat)
 
 https://www.virtualbox.org
 
-https://releases.ubuntu.com/14.04/ubuntu-14.04.6-desktop-amd64.iso
+https://releases.ubuntu.com/24.04.2/ubuntu-24.04.2-desktop-amd64.iso
 
 2. Install dependencies
 
@@ -52,8 +52,10 @@ make
 ./src/qt/FastPeercoin-qt
 ```
 
-7. What happened to mining?
+### What happened to mining?
 
-CPU mining was possible for the first couple of weeks of the FastPeercoin project but has evolved to using ASIC devices.
+CPU mining was possible for the first few weeks of the FastPeercoin project but has evolved to using ASIC devices.
 
-If you'd like to mine, have a look at the Docker/command-line project FastPeercoind: https://github.com/FastPeercoin/FastPeercoind
+If you'd like to mine, have a look at the Docker/command-line project: https://github.com/FastPeercoin/FastPeercoind
+
+And the Stratum Server setup guide: https://talk.peercoin.net/t/guide-how-to-solo-mine-peercoin/16353

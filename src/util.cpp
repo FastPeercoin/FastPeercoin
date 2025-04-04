@@ -1136,7 +1136,7 @@ const boost::filesystem::path &GetDataDir(bool fNetSpecific)
 
 boost::filesystem::path GetConfigFile()
 {
-    boost::filesystem::path pathConfigFile(GetArg("-conf", "peercoin.conf"));
+    boost::filesystem::path pathConfigFile(GetArg("-conf", "fastpeercoin.conf"));
     if (!pathConfigFile.is_complete()) pathConfigFile = GetDataDir(false) / pathConfigFile;
 
     // Load old config file if present

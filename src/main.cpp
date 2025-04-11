@@ -2657,7 +2657,7 @@ bool ProcessBlock(CValidationState &state, CNode* pfrom, CBlock* pblock, CDiskBl
         mapOrphanBlocksByPrev.erase(hashPrev);
     }
 
-    printf("ProcessBlock: ACCEPTED\n");
+    printf("ProcessBlock: ACCEPTED (%d) %s\n", mapBlockIndex[hash]->nHeight, hash.ToString().c_str());
 
     return true;
 }

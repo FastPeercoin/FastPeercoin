@@ -1230,6 +1230,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
         return false;
     int64 nCredit = 0;
     CScript scriptPubKeyKernel;
+    uint maxAttempts = 0;
     BOOST_FOREACH(PAIRTYPE(const CWalletTx*, unsigned int) pcoin, setCoins)
     {
         CDiskTxPos postx;
@@ -1309,6 +1310,15 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
         }
         if (fKernelFound)
             break; // if kernel is found stop searching
+
+        if (maxAttempts > 100)
+        {
+            break;
+        }
+        else
+        {
+            maxAttempts++;
+        }
     }
     if (nCredit == 0 || nCredit > nBalance - nReserveBalance)
         return false;

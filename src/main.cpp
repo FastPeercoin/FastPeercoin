@@ -4982,7 +4982,7 @@ void BitcoinMiner(CWallet *pwallet, bool fProofOfStake)
                 CheckWork(pblock, *pwalletMain, reservekey);
                 SetThreadPriority(THREAD_PRIORITY_LOWEST);
             }
-            MilliSleep(500);
+            MilliSleep(1);
             continue;
         }
 

@@ -13,6 +13,7 @@
 #include "base58.h"
 #include "txdb.h"
 #include <boost/algorithm/string/replace.hpp>
+#include <random>
 
 using namespace std;
 
@@ -1230,8 +1231,15 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
         return false;
     int64 nCredit = 0;
     CScript scriptPubKeyKernel;
-    uint maxAttempts = 0;
-    BOOST_FOREACH(PAIRTYPE(const CWalletTx*, unsigned int) pcoin, setCoins)
+
+    std::vector<pair<const CWalletTx*,unsigned int> > shuffledCoins(setCoins.begin(), setCoins.end());
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::shuffle(shuffledCoins.begin(), shuffledCoins.end(), gen);
+
+    uint attempts = 0;
+    BOOST_FOREACH(PAIRTYPE(const CWalletTx*, unsigned int) pcoin, shuffledCoins)
     {
         CDiskTxPos postx;
         if (!pblocktree->ReadTxIndex(pcoin.first->GetHash(), postx))
@@ -1246,12 +1254,12 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
             return error("%s() : deserialize or I/O error in CreateCoinStake()", __PRETTY_FUNCTION__);
         }
 
-        static int nMaxStakeSearchInterval = 60;
+        static int nMaxStakeSearchInterval = 1;
         if (header.GetBlockTime() + nStakeMinAge > txNew.nTime - nMaxStakeSearchInterval)
             continue; // only count coins meeting min age requirement
 
         bool fKernelFound = false;
-        for (unsigned int n=0; n<min(nSearchInterval,(int64)nMaxStakeSearchInterval) && !fKernelFound; n++)
+        for (unsigned int n=0; n<nMaxStakeSearchInterval && !fKernelFound; n++)
         {
             // Search backward in time from the given txNew timestamp 
             // Search nSearchInterval seconds back up to nMaxStakeSearchInterval
@@ -1311,13 +1319,10 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
         if (fKernelFound)
             break; // if kernel is found stop searching
 
-        if (maxAttempts > 100)
+        attempts++;
+        if (attempts >= 32)
         {
             break;
-        }
-        else
-        {
-            maxAttempts++;
         }
     }
     if (nCredit == 0 || nCredit > nBalance - nReserveBalance)
